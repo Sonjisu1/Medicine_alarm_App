@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/person"
+        android:enabled="true"
+        android:icon="@drawable/ic_list_black_24dp"
+        android:title="오늘"></item>
+
+    <item
+        android:id="@+id/person1"
+        android:enabled="true"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="MY"></item>
+
+</menu>
