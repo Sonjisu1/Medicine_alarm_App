@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddMedicine">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="복용할 약 이름"
+        android:layout_marginTop="10dp"
+
+        android:layout_marginLeft="7dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        ></TextView>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edt1"
+        ></EditText>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="복용 날짜"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+
+        android:layout_marginLeft="7dp"
+        android:textStyle="bold"></TextView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+
+            android:text="월"
+            android:id="@+id/monday"
+
+            ></Button>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="화"
+            android:id="@+id/tus"
+
+            ></Button>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="수"
+            android:id="@+id/wen"
+
+            ></Button>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="목"
+            android:id="@+id/thu"
+            ></Button>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="금"
+            android:id="@+id/fri"
+
+            ></Button>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="토"
+            android:id="@+id/sat"
+            ></Button>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="일"
+            android:id="@+id/sun"
+            ></Button>
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="알람 시간"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="7dp"
+        android:textStyle="bold"></TextView>
+
+    <TimePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timepicker"
+        android:timePickerMode="spinner"></TimePicker>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="알람시간 추가하기"
+        android:id="@+id/timeAdd"></Button>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="같이 복용할 다른 약 "
+        android:textSize="20dp"
+
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="7dp"
+        android:textStyle="bold"></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:id="@+id/togeEdt"></EditText>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="추가"
+            android:layout_weight="0.4"
+            android:id="@+id/togetheradd"></Button>
+
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/diffList"></ListView>
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="약의 총 개수"
+
+            android:layout_weight="0.5"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="7dp"
+            android:textStyle="bold"></TextView>
+
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnadd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="저장" />
+
+
+</LinearLayout>
