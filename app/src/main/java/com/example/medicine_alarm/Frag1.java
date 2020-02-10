@@ -27,6 +27,7 @@ import java.util.Date;
 public class Frag1 extends Fragment {
 
     View view;
+    String Medname;
 
 
 
@@ -35,8 +36,11 @@ public class Frag1 extends Fragment {
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
 
 
-    public  static Frag1 newInstance(){
+    public  static Frag1 newInstance(String value){
         Frag1 frag1 = new Frag1();
+        Bundle args = new Bundle();
+        args.putString("name",value);
+        frag1.setArguments(args);
         return frag1;
     }
 
@@ -47,6 +51,13 @@ public class Frag1 extends Fragment {
         showItemList();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Medname = getArguments().getString("name");
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,6 +65,7 @@ public class Frag1 extends Fragment {
         view = inflater.inflate(R.layout.frag1,container,false); //레이아웃 지정
         Context context = view.getContext(); //Context가져오기
 
+        Toast.makeText(getContext(),Medname,Toast.LENGTH_SHORT).show();
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView2); //달력
         TextView MonthDay = (TextView) view.findViewById(R.id.calendar);

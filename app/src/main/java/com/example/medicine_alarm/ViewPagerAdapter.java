@@ -17,7 +17,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return Frag1.newInstance();
+                return Frag1.newInstance("안녕");
             case 1:
                 return Frag2.newInstance();
             case 2:
