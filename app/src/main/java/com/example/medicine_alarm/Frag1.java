@@ -44,6 +44,8 @@ public class Frag1 extends Fragment {
         return frag1;
     }
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -65,7 +67,7 @@ public class Frag1 extends Fragment {
         view = inflater.inflate(R.layout.frag1,container,false); //레이아웃 지정
         Context context = view.getContext(); //Context가져오기
 
-        Toast.makeText(getContext(),Medname,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(),Medname,Toast.LENGTH_SHORT).show();
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView2); //달력
         TextView MonthDay = (TextView) view.findViewById(R.id.calendar);
