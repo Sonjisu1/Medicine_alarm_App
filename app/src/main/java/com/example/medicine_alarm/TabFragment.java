@@ -42,7 +42,7 @@ public class TabFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.tabfragment,container,false);
 
-        Toast.makeText(getContext(), MediName, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), MediName, Toast.LENGTH_SHORT).show();
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
@@ -55,8 +55,7 @@ public class TabFragment extends Fragment {
         return view;
     }
 
-    public static class ViewPagerAdapter extends FragmentPagerAdapter {
-
+    public  class ViewPagerAdapter extends FragmentPagerAdapter {
 
 
         public ViewPagerAdapter(@NonNull FragmentManager fm) {
@@ -68,7 +67,7 @@ public class TabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return Frag1.newInstance("데이터 보내기");
+                    return Frag1.newInstance(MediName);
                 case 1:
                     return Frag2.newInstance();
                 case 2:
