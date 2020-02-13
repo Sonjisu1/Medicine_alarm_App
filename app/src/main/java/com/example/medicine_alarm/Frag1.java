@@ -59,7 +59,7 @@ public class Frag1 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Medname = getArguments().getString("name");
+        Medname = getArguments().getString("name");     //데이터 받기
 
     }
 
@@ -81,6 +81,10 @@ public class Frag1 extends Fragment {
 
         recyclerView .setAdapter(recyclerImageTextAdapter); //어뎁터 설정
 
+        if(Medname != null){
+            addItem(Medname);         //아이템 추가
+        }
+
         //아이템 추가
        /* ListViewItem listViewItem = new ListViewItem(R.drawable.button_design,Medname,"2알..",R.drawable.ic_delete_black_24dp);
        list.add(listViewItem);
@@ -89,9 +93,7 @@ public class Frag1 extends Fragment {
      //  if(Medname !=null)
 
 
-        if(Medname != null){
-            addItem(Medname);
-        }
+
 
 
 
