@@ -39,12 +39,14 @@ public class Frag1 extends Fragment {
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
 
 
+    //arguments 를 전달하는 프레그먼트 객체 생성 메소드
+    // newInstance 메소드를 통해 파라미터로 필요한 데이터를 전달하고 Intent를 통해 데이터를 넘겨줌
     public  static Frag1 newInstance(String value){
         Frag1 frag1 = new Frag1();
         Bundle args = new Bundle();
         args.putString("name",value);
         frag1.setArguments(args);
-        return frag1;
+        return frag1;       // fragment return
     }
 
 
@@ -59,7 +61,8 @@ public class Frag1 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Medname = getArguments().getString("name");     //데이터 받기
+        Medname = getArguments().getString("name");
+        //newInstacne에서 전달된 bundle데이터를 getArguments()를 통해 받음
 
     }
 
