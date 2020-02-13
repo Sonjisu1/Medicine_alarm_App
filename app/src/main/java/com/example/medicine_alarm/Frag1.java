@@ -31,6 +31,9 @@ public class Frag1 extends Fragment {
 
 
 
+
+
+
     RecyclerView recyclerView;
     RecyclerImageTextAdapter recyclerImageTextAdapter;
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
@@ -65,27 +68,41 @@ public class Frag1 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.frag1,container,false); //레이아웃 지정
-        Context context = view.getContext(); //Context가져오기
 
-        Toast.makeText(getContext(),Medname,Toast.LENGTH_SHORT).show();
+
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView2); //달력
         TextView MonthDay = (TextView) view.findViewById(R.id.calendar);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclelist);
 
 
-        recyclerImageTextAdapter = new RecyclerImageTextAdapter(context,list);
+        recyclerImageTextAdapter = new RecyclerImageTextAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
 
-        recyclerView.setAdapter(recyclerImageTextAdapter); //어뎁터 설정
+        recyclerView .setAdapter(recyclerImageTextAdapter); //어뎁터 설정
 
-        addItem("타이레놀"); //아이템 추가
+        //아이템 추가
+       /* ListViewItem listViewItem = new ListViewItem(R.drawable.button_design,Medname,"2알..",R.drawable.ic_delete_black_24dp);
+       list.add(listViewItem);
+       recyclerImageTextAdapter.notifyDataSetChanged();
+        */
+     //  if(Medname !=null)
+
+
+        if(Medname != null){
+            addItem(Medname);
+        }
+
+
+
+
+
 
         //리사이클러뷰 클릭 이벤트
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                //  ListViewItem listViewItem =  list.get(position);
+
 
                 Intent intent = new Intent(getActivity(), AddMedicine.class);
 
@@ -96,14 +113,13 @@ public class Frag1 extends Fragment {
 
             @Override
             public void onLongClick(View view, int position) {
-                Toast.makeText(getContext(),"롱클릭",Toast.LENGTH_SHORT).show();
 
             }
         }));
 
 
 
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-mm-dd hh:kk");
         Date time = new Date(); //DATE 객체선언
 
         String time1 = format1.format(time); //날짜 시간 출력
@@ -116,10 +132,15 @@ public class Frag1 extends Fragment {
             @Override
             public void onClick(View v) {//먹을약 생성
 
+
+
                 Intent intent = new Intent(getActivity(),AddMedicine.class);  //frgment에서는 this를 쓸수 없기 때문에
 
                 //Acitivity의 참조를 얻어오기 위해서 getActivity()를사용한다.
                 startActivity(intent);
+
+
+
 
             }
         });
@@ -129,13 +150,15 @@ public class Frag1 extends Fragment {
     }
 
     public void showItemList(){           //처음에만 제대로 나오고 그 후에는 제대로 나오지 않아서 추가
-        recyclerImageTextAdapter = new RecyclerImageTextAdapter(getContext(),list);
+        recyclerImageTextAdapter = new RecyclerImageTextAdapter(list);
         recyclerView.setAdapter(recyclerImageTextAdapter);
     }
 
 
 //리사이클러뷰 아이템 추가 함수
     public void addItem ( String title){
+
+
 
         ListViewItem item = new ListViewItem();
 
@@ -145,7 +168,11 @@ public class Frag1 extends Fragment {
         item.setIcon(R.drawable.ic_delete_black_24dp);
 
 
+        //Toast.makeText(getContext(),count,Toast.LENGTH_SHORT).show();
+
         list.add(item);           //데이터 추가
+
+        recyclerImageTextAdapter.notifyDataSetChanged();
 
 
     }
