@@ -2,6 +2,7 @@ package com.example.medicine_alarm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -11,15 +12,26 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity implements AddMedicine.onClickListenr{
 
     private TabFragment tabFragment; //tab을 구현하기위한 fragment
      private Frag2 frag2;
     String MedicineName;
+    ArrayList<ListViewItem> list;
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
+
+    //AddMedicine Fragment에서 보낸 data를 받을 interface
+    //AddMedicine에서 정의한 interface 구현
+    @Override
+    public void onInputedData(String name) {
+        MedicineName = name;
+
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -27,13 +39,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        extras = getIntent().getExtras();  //Intent로 보낸 데이터 받기
+      /*  extras = getIntent().getExtras();  //Intent로 보낸 데이터 받기
         if(extras != null) {
              MedicineName = extras.getString("name1");                //데이터를 MedicineName에 저장
             //Toast.makeText(getApplicationContext(),"데이터 받음",Toast.LENGTH_SHORT).show();
 
 
-        }
+
+
+
+        }*/
 
             bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -73,4 +88,15 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+
+    //Fragment를 호출할때 사용할 메소드
+    public void callFragment(AddMedicine addMedicine){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame,addMedicine).commit();
+    }
+
+
+
 }

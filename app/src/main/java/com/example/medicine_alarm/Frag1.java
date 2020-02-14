@@ -17,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,10 +35,12 @@ public class Frag1 extends Fragment {
 
 
 
-
+    private FragmentManager fm;
+    private FragmentTransaction ft;
     RecyclerView recyclerView;
     RecyclerImageTextAdapter recyclerImageTextAdapter;
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
+
 
 
     //arguments 를 전달하는 프레그먼트 객체 생성 메소드
@@ -138,13 +142,16 @@ public class Frag1 extends Fragment {
             public void onClick(View v) {//먹을약 생성
 
 
-
-                Intent intent = new Intent(getActivity(),AddMedicine.class);  //frgment에서는 this를 쓸수 없기 때문에
+             /*  Intent intent = new Intent(getActivity(),AddMedicine.class);  //frgment에서는 this를 쓸수 없기 때문에
 
                 //Acitivity의 참조를 얻어오기 위해서 getActivity()를사용한다.
-                startActivity(intent);
+                startActivity(intent);*/
 
 
+             //Fragment 내부에서 Fragment로 이동하는 것은 그 Fragment가 자신의 하위 레벨이 아니기
+                //때문에 내부에서 직접 제어할수 없으므로 Acitivity를 호출하여 제어해야한다.
+                ((MainActivity)getActivity()).callFragment(AddMedicine.newInstance());
+                //새로 불러올 Fragment를 Acitivity로 전달
 
 
             }
