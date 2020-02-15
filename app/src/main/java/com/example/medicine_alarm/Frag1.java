@@ -3,6 +3,7 @@ package com.example.medicine_alarm;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,30 +26,35 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Frag1 extends Fragment {
 
     View view;
-    String Medname;
-
-
+  ArrayListSend Medname;
 
 
 
     private FragmentManager fm;
     private FragmentTransaction ft;
     RecyclerView recyclerView;
+    private int count = -1;
     RecyclerImageTextAdapter recyclerImageTextAdapter;
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
 
+    public Frag1(){
+
+    }
 
 
     //arguments 를 전달하는 프레그먼트 객체 생성 메소드
     // newInstance 메소드를 통해 파라미터로 필요한 데이터를 전달하고 Intent를 통해 데이터를 넘겨줌
-    public  static Frag1 newInstance(String value){
+    public  static Frag1 newInstance(ArrayListSend list){
         Frag1 frag1 = new Frag1();
         Bundle args = new Bundle();
-        args.putString("name",value);
+        args.putParcelable("list",list);
+        //args.putString("name1",name);
+       //args.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) list);
         frag1.setArguments(args);
         return frag1;       // fragment return
     }
@@ -65,7 +71,8 @@ public class Frag1 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Medname = getArguments().getString("name");
+       // Medname = getArguments().getString("name1");
+        Medname = getArguments().getParcelable("list");
         //newInstacne에서 전달된 bundle데이터를 getArguments()를 통해 받음
 
     }
@@ -83,25 +90,39 @@ public class Frag1 extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclelist);
 
 
+      //if(Medname !=null)
+       // Toast.makeText(getContext(),"frage 전달",Toast.LENGTH_SHORT).show();
+
+
         recyclerImageTextAdapter = new RecyclerImageTextAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
 
         recyclerView .setAdapter(recyclerImageTextAdapter); //어뎁터 설정
 
-        if(Medname != null){
-            addItem(Medname);         //아이템 추가
+
+        for(ListViewItem listViewItem: Medname.getListViewItem()){   //아이템 추가
+
+
+            ListViewItem item = new ListViewItem();
+
+            item.setTitle(listViewItem.getTitle());
+            item.setTitle1("3알");
+            item.setDesc(R.drawable.ic_person_black_24dp);
+            item.setIcon(R.drawable.ic_list_black_24dp);
+
+            list.add(item);
+
+
+          recyclerImageTextAdapter.notifyDataSetChanged();
+            Toast.makeText(getContext(),"성공",Toast.LENGTH_SHORT).show();
+
         }
 
-        //아이템 추가
-       /* ListViewItem listViewItem = new ListViewItem(R.drawable.button_design,Medname,"2알..",R.drawable.ic_delete_black_24dp);
-       list.add(listViewItem);
-       recyclerImageTextAdapter.notifyDataSetChanged();
-        */
-     //  if(Medname !=null)
+       /* if(Medname != null){   //아이템 추가
 
-
-
-
+            addItem(Medname);
+        }
+*/
 
 
 
@@ -113,7 +134,7 @@ public class Frag1 extends Fragment {
             public void onClick(View view, int position) {
 
 
-                Intent intent = new Intent(getActivity(), AddMedicine.class);
+               Intent intent = new Intent(getActivity(), AddMedicine.class);
 
                 startActivity(intent);
                 // Toast.makeText(getContext(),"클릭",Toast.LENGTH_SHORT).show();
@@ -142,18 +163,13 @@ public class Frag1 extends Fragment {
             public void onClick(View v) {//먹을약 생성
 
 
-             /*  Intent intent = new Intent(getActivity(),AddMedicine.class);  //frgment에서는 this를 쓸수 없기 때문에
+             Intent intent = new Intent(getActivity(),AddMedicine.class);  //frgment에서는 this를 쓸수 없기 때문에
 
                 //Acitivity의 참조를 얻어오기 위해서 getActivity()를사용한다.
-                startActivity(intent);*/
+                startActivity(intent);
 
 
-             //Fragment 내부에서 Fragment로 이동하는 것은 그 Fragment가 자신의 하위 레벨이 아니기
-                //때문에 내부에서 직접 제어할수 없으므로 Acitivity를 호출하여 제어해야한다.
-                ((MainActivity)getActivity()).callFragment(AddMedicine.newInstance());
-                //새로 불러올 Fragment를 Acitivity로 전달
-
-
+                //Toast.makeText(getContext(),count,Toast.LENGTH_SHORT).show();
             }
         });
 
