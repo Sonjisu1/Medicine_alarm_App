@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,11 +15,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Frag1.onClickListenr{
 
     private TabFragment tabFragment; //tab을 구현하기위한 fragment
      private Frag2 frag2;
 
+     String data;
     String MedicineName;
     ArrayList<ListViewItem> list;
     private BottomNavigationView bottomNavigationView;
@@ -27,10 +29,21 @@ public class MainActivity extends AppCompatActivity {
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
     ArrayListSend arrayListSend;
 
+
+    @Override
+    public void onInputedData(String name) {// Frag1에서 받은 데이터를 MainActivity에서 사용하기 위한 오버라이딩
+
+        data = name;      //받은 데이터를 data 변수에 저장
+        Intent intent = new Intent(MainActivity.this, AddMedicine.class);
+        intent.putExtra("name1", data);  //Addmedicine Activity에 데이터전달
+        startActivity(intent);  //호출
+
+    }
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         list = new ArrayList<>();

@@ -38,13 +38,40 @@ public class Frag1 extends Fragment {
     private FragmentManager fm;
     private FragmentTransaction ft;
     RecyclerView recyclerView;
-    private int count = -1;
+
     RecyclerImageTextAdapter recyclerImageTextAdapter;
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
 
     public Frag1(){
 
     }
+
+    //AddActivity에게 데이터를 전달하기위한 interface구현
+    public interface onClickListenr{
+        void onInputedData(String name);
+    }
+
+    private onClickListenr mCallback;
+
+
+
+    //MainActivity에서 구현한 인터페이스와 연결
+    //Fragment는 종속된 Activity를 통해서 다른 Activity나 Fragment와 통신하기
+    //때문에 먼저 MainActivity로 데이터를 전달
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        // mCallback = (onClickListenr) context;
+        if(getActivity() != null && getActivity() instanceof  onClickListenr){
+            mCallback = (onClickListenr) getActivity();
+        }
+    }
+    //연결을 끊기위한 메소드
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
 
 
     //arguments 를 전달하는 프레그먼트 객체 생성 메소드
@@ -100,6 +127,7 @@ public class Frag1 extends Fragment {
         recyclerView .setAdapter(recyclerImageTextAdapter); //어뎁터 설정
 
 
+
         for(ListViewItem listViewItem: Medname.getListViewItem()){   //아이템 추가
 
 
@@ -129,14 +157,27 @@ public class Frag1 extends Fragment {
 
 
         //리사이클러뷰 클릭 이벤트
+        //리사이클러뷰 클릭 시 편집을 위해서 이전 입력했던 데이터가 뜨게 함
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), recyclerView, new ClickListener() {
             @Override
-            public void onClick(View view, int position) {
+            public void onClick(View view, int position) {//약 수정을 위해서 클릭 시 이전 데이터가 나오게 함
 
 
-               Intent intent = new Intent(getActivity(), AddMedicine.class);
+                ListViewItem item = list.get(position);
 
-                startActivity(intent);
+
+                //Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_SHORT).show();
+
+                //list에 저장된 데이터를 Activity로 보냄
+                if(mCallback !=null) {
+                    mCallback.onInputedData(item.getTitle());
+                }
+
+               /*Intent intent = new Intent(getActivity(), AddMedicine.class);
+
+                startActivity(intent);*/
+
+
                 // Toast.makeText(getContext(),"클릭",Toast.LENGTH_SHORT).show();
 
             }
