@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     private TabFragment tabFragment; //tab을 구현하기위한 fragment
      private Frag2 frag2;
 
-     String data;
+    ListViewItem item;
+    String data;
     String MedicineName;
     ArrayList<ListViewItem> list;
     private BottomNavigationView bottomNavigationView;
@@ -48,25 +49,26 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
         list = new ArrayList<>();
 
-        extras = getIntent().getExtras();  //Intent로 보낸 데이터 받기
+        extras = getIntent().getExtras();  //AddMedicine에서 보낸 데이터 받기
         if(extras != null) {
              MedicineName = extras.getString("name1");                //데이터를 MedicineName에 저장
             //Toast.makeText(getApplicationContext(),"데이터 받음",Toast.LENGTH_SHORT).show();
 
             //ListViewItem 객체 생성
-         ListViewItem item = new ListViewItem();
+          item = new ListViewItem();
 
             item.setTitle(MedicineName);                         //데이터 지정
             item.setTitle1("2알");
             item.setDesc(R.drawable.ic_person_black_24dp);
             item.setIcon(R.drawable.ic_delete_black_24dp);
 
+
             //ArrayList에 추가
-            list.add(item);
+            /*list.add(item);
 
             arrayListSend = new ArrayListSend();
             arrayListSend.setListViewItem(list);
-            // ArrayListSend 객체에 ArrayList 저장
+            // ArrayListSend 객체에 ArrayList 저장*/
 
         }
 
@@ -99,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         ft = fm.beginTransaction(); //프레그멘트 교체가 일어날때
         switch (n) {
             case 0:
-                ft.replace(R.id.frame, TabFragment.neInstance(arrayListSend));// TabFragment 레이아웃으로 교체/ 데이터 전달
+                ft.replace(R.id.frame, TabFragment.neInstance(item));// TabFragment 레이아웃으로 교체
+                //Frag1 으로 데이터를 전달하기위해 TabFragment의 newInstance메소드를 이용해 TabFragment로 전달
 
                 ft.commit();
                 break;

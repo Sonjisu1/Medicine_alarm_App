@@ -23,13 +23,13 @@ public class TabFragment extends Fragment {
     //Tablayout 구현하는 큰 틀
     //그 안에서 Frag1,Frag2 가 replace됨
     private FragmentPagerAdapter fragmentPagerAdapter;
-    public ArrayListSend MediName;
+    public ListViewItem MediName;
 
-    //MainActivity에서 받아온 ArrayListSend 를 받아옴
-    public  static TabFragment neInstance(ArrayListSend arrayListSend){
+    //MainActivity에서 받아온 Item 를 받아옴
+    public  static TabFragment neInstance(ListViewItem item){
         TabFragment tabFragment = new TabFragment();
         Bundle args = new Bundle();
-        args.putParcelable("list",arrayListSend);
+        args.putParcelable("list",item);
 
      //  args.putParcelableArrayList("list",(ArrayList<? extends Parcelable>) list);
         tabFragment.setArguments(args);
@@ -46,6 +46,8 @@ public class TabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
 
         View view = inflater.inflate(R.layout.tabfragment,container,false);
 

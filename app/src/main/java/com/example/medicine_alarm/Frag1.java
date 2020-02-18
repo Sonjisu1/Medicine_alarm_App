@@ -31,7 +31,7 @@ import java.util.List;
 public class Frag1 extends Fragment {
 
     View view;
-  ArrayListSend Medname;
+  ListViewItem Medname;
 
 
 
@@ -76,7 +76,7 @@ public class Frag1 extends Fragment {
 
     //arguments 를 전달하는 프레그먼트 객체 생성 메소드
     // newInstance 메소드를 통해 파라미터로 필요한 데이터를 전달하고 Intent를 통해 데이터를 넘겨줌
-    public  static Frag1 newInstance(ArrayListSend list){
+    public  static Frag1 newInstance(ListViewItem list){
         Frag1 frag1 = new Frag1();
         Bundle args = new Bundle();
         args.putParcelable("list",list);
@@ -93,6 +93,20 @@ public class Frag1 extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         showItemList();
+
+        if(Medname != null){
+
+            ListViewItem item = new ListViewItem();
+            item.setTitle(Medname.getTitle());
+            item.setTitle1(Medname.getTitle1());
+            item.setIcon(Medname.getIcon());
+            item.setDesc(Medname.getDesc());
+
+            list.add(item);
+            recyclerImageTextAdapter.notifyDataSetChanged();
+            Medname =null;
+
+        }
     }
 
     @Override
@@ -111,6 +125,8 @@ public class Frag1 extends Fragment {
         view = inflater.inflate(R.layout.frag1,container,false); //레이아웃 지정
 
 
+
+
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView2); //달력
         TextView MonthDay = (TextView) view.findViewById(R.id.calendar);
@@ -121,30 +137,13 @@ public class Frag1 extends Fragment {
        // Toast.makeText(getContext(),"frage 전달",Toast.LENGTH_SHORT).show();
 
 
+
         recyclerImageTextAdapter = new RecyclerImageTextAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
 
         recyclerView .setAdapter(recyclerImageTextAdapter); //어뎁터 설정
 
 
-
-        for(ListViewItem listViewItem: Medname.getListViewItem()){   //아이템 추가
-
-
-            ListViewItem item = new ListViewItem();
-
-            item.setTitle(listViewItem.getTitle());
-            item.setTitle1("3알");
-            item.setDesc(R.drawable.ic_person_black_24dp);
-            item.setIcon(R.drawable.ic_list_black_24dp);
-
-            list.add(item);
-
-
-          recyclerImageTextAdapter.notifyDataSetChanged();
-            Toast.makeText(getContext(),"성공",Toast.LENGTH_SHORT).show();
-
-        }
 
        /* if(Medname != null){   //아이템 추가
 
@@ -163,10 +162,10 @@ public class Frag1 extends Fragment {
             public void onClick(View view, int position) {//약 수정을 위해서 클릭 시 이전 데이터가 나오게 함
 
 
-                ListViewItem item = list.get(position);
+              ListViewItem item = list.get(position);
 
 
-                //Toast.makeText(getContext(),item.getTitle(),Toast.LENGTH_SHORT).show();
+
 
                 //list에 저장된 데이터를 Activity로 보냄
                 if(mCallback !=null) {
@@ -184,6 +183,8 @@ public class Frag1 extends Fragment {
 
             @Override
             public void onLongClick(View view, int position) {
+
+               // list.remove(list.get(position));
 
             }
         }));
