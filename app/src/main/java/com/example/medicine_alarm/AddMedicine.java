@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class AddMedicine extends AppCompatActivity {
     EditText edt1;
     String data;
+    Spinner spinner;
 
 
 
@@ -33,6 +35,7 @@ public class AddMedicine extends AppCompatActivity {
 
         Button btnadd =(Button)findViewById(R.id.btnadd);
         edt1 = (EditText)findViewById(R.id.edt1);
+        spinner = (Spinner)findViewById(R.id.spinner);
 
       //  Toast.makeText(getApplicationContext(),data,Toast.LENGTH_SHORT).show();
 
@@ -40,6 +43,8 @@ public class AddMedicine extends AppCompatActivity {
         if(extras != null) {
 
            data = extras.getString("name1");
+
+
         edt1.setText(data);  //이전 데이터를 저장
         }
 
@@ -49,6 +54,8 @@ public class AddMedicine extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AddMedicine.this,MainActivity.class);
                 intent.putExtra("name1",edt1.getText().toString());  ///MainActivity에 데이터 전달
+                intent.putExtra("account",spinner.getSelectedItem().toString());
+
                 startActivity(intent);
             }
         });

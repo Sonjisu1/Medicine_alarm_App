@@ -168,6 +168,15 @@
             android:layout_marginLeft="7dp"
             android:textStyle="bold"></TextView>
 
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
+            android:entries="@array/freq"
+            android:id="@+id/spinner"></Spinner>
+
+
 
 
     </LinearLayout>

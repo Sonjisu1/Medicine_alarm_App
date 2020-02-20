@@ -22,13 +22,14 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
     ListViewItem item;
     String data;
+    String account;
     String MedicineName;
     ArrayList<ListViewItem> list;
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
-    ArrayListSend arrayListSend;
+
 
 
     @Override
@@ -51,14 +52,15 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
         extras = getIntent().getExtras();  //AddMedicine에서 보낸 데이터 받기
         if(extras != null) {
-             MedicineName = extras.getString("name1");                //데이터를 MedicineName에 저장
+             MedicineName = extras.getString("name1");//데이터를 MedicineName에 저장
+            account = extras.getString("account");
             //Toast.makeText(getApplicationContext(),"데이터 받음",Toast.LENGTH_SHORT).show();
 
             //ListViewItem 객체 생성
           item = new ListViewItem();
 
             item.setTitle(MedicineName);                         //데이터 지정
-            item.setTitle1("2알");
+            item.setTitle1(account);
             item.setDesc(R.drawable.ic_person_black_24dp);
             item.setIcon(R.drawable.ic_delete_black_24dp);
 
