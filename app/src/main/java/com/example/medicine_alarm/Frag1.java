@@ -183,8 +183,9 @@ public class Frag1 extends Fragment {
 
             @Override
             public void onLongClick(View view, int position) {
+                list.remove(position);
+                recyclerImageTextAdapter.notifyItemRemoved(position);
 
-               // list.remove(list.get(position));
 
             }
         }));
