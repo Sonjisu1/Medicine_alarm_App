@@ -64,7 +64,8 @@
             android:background="#ffffff"
             android:text="공지사항"
 
-            android:id="@+id/tt"></Button>
+            android:id="@+id/noticebtn"></Button>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
