@@ -5,10 +5,9 @@ import android.os.Parcelable;
 
 //아이템 뷰에 표시될 데이터를 저장할 클래스 정의
 public class ListViewItem implements Parcelable{
-    private int iconDrawable;  //그림1
-    private String titleStr ;  //약이름
-    private int descStr ;        //개수
-    private  String titleStr1; //그림2
+    public int iconDrawable; //아이콘
+    public String Medicinename; //약이름
+    public String account;     //약개수 //개수
 
 
     public ListViewItem(){
@@ -17,17 +16,19 @@ public class ListViewItem implements Parcelable{
 
     public ListViewItem(int icon, String title, String title2, int  desc){
         this.iconDrawable = icon;
-        this.titleStr = title;
-        this.titleStr1 = title2;
-        this.descStr = desc;
+        this.Medicinename = title;
+        this.account = title2;
+
 
     }
 
+
+
     protected ListViewItem(Parcel in) {
         iconDrawable = in.readInt();
-        titleStr = in.readString();
-        descStr = in.readInt();
-        titleStr1 = in.readString();
+       Medicinename= in.readString();
+
+        account = in.readString();
     }
 
     public static final Creator<ListViewItem> CREATOR = new Creator<ListViewItem>() {
@@ -46,23 +47,19 @@ public class ListViewItem implements Parcelable{
         iconDrawable = icon ;
     }
     public void setTitle(String title) {
-        titleStr = title ;
+       Medicinename = title ;
     }
-    public void setTitle1(String title1) {titleStr1 = title1;}
-    public void setDesc(int desc) {
-        descStr = desc ;
-    }
+    public void setTitle1(String title1) {account = title1;}
+
 
     public int getIcon() {
         return this.iconDrawable ;
     }
     public String getTitle() {
-        return this.titleStr ;
+        return this.Medicinename ;
     }
-    public int getDesc() {
-        return this.descStr ;
-    }
-    public String getTitle1() {return this.titleStr1;}
+
+    public String getTitle1() {return this.account;}
 
 
     @Override
@@ -73,9 +70,9 @@ public class ListViewItem implements Parcelable{
     //객체 전달할 때 호출
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(titleStr);
-        dest.writeString(titleStr1);
+        dest.writeString(Medicinename);
+        dest.writeString(account);
         dest.writeInt(iconDrawable);
-        dest.writeInt(descStr);
+
     }
 }

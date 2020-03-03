@@ -31,8 +31,12 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
     public void setOnItemClickListener(OnItemClickListener listener){
         this.mListener = listener;
     }
-//Context context,
+    //Context context,
     RecyclerImageTextAdapter(){
+
+    }
+    RecyclerImageTextAdapter(Context context){
+        this.context =context;
 
     }
 
@@ -56,7 +60,7 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
         //아이템 뷰 레이아웃을 inflate 해서 view에 저장
         View view = inflater.inflate(R.layout.listview_item,parent,false);
         RecyclerImageTextAdapter.ViewHolder vh = new RecyclerImageTextAdapter.ViewHolder(view);
-           // 하나의 아이템 뷰를 뷰홀더에 저장
+        // 하나의 아이템 뷰를 뷰홀더에 저장
         return vh;
     }
 
@@ -66,10 +70,10 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
 
         ListViewItem item = mData.get(position);
 
-        holder.icon.setImageResource(item.getIcon());
-        holder.icon2.setImageResource(item.getDesc());
-        holder.title.setText(item.getTitle());
-        holder.desc.setText(item.getTitle1());
+        holder.iconDrawable.setImageResource(item.getIcon());
+
+        holder.Medicinename.setText(item.getTitle());
+        holder.account.setText(item.getTitle1());
 
 
 
@@ -83,52 +87,36 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
         return mData.size();
     }
 
-   //아이템 뷰를 저장하는 뷰홀더 클래스
+    //아이템 뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView icon;
-        TextView title;
-        TextView desc;
-        ImageView icon2;
+        ImageView iconDrawable;
+        TextView Medicinename;
+        TextView account;
+
         //뷰 객체에 대한 참조
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             //뷰 객체 대한 참조
-            icon = itemView.findViewById(R.id.imageview);
-            title = itemView.findViewById(R.id.text1);
-            desc = itemView.findViewById(R.id.text2);
-            icon2 = itemView.findViewById(R.id.image2);
+            iconDrawable = itemView.findViewById(R.id.imageview);
+            Medicinename = itemView.findViewById(R.id.text1);
+            account= itemView.findViewById(R.id.text2);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos =getAdapterPosition(); //아이템 위치
-                    if(pos != RecyclerView.NO_POSITION){
-                        ListViewItem item = mData.get(pos);
-                        // 데이터 리스트로부터 아이템 데이터 참조
 
-                        if(mListener != null) {
-                            mListener.onItemClick(v, pos);
-                        }
 
-                    }
-                }
-            });
         }
     }
 
-    public void addItem(String name){
-        ListViewItem item = new ListViewItem();
+    public void addItem(ListViewItem listViewItem){
 
-        item.setTitle(name);
-      //  item.setname(name);
 
-        mData.add(item);
+        //  item.setname(name);
+
+        mData.add(0,listViewItem);
+        notifyItemInserted(0);
     }
-
-
 
 
 }

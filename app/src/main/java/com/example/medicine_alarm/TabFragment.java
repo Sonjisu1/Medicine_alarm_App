@@ -26,20 +26,21 @@ public class TabFragment extends Fragment {
     public ListViewItem MediName;
 
     //MainActivity에서 받아온 Item 를 받아옴
-    public  static TabFragment neInstance(ListViewItem item){
+    public  static TabFragment neInstance(){
         TabFragment tabFragment = new TabFragment();
+        /*
         Bundle args = new Bundle();
-        args.putParcelable("list",item);
+        args.putParcelable("list",item);//item 은 ListviewItem형태
 
      //  args.putParcelableArrayList("list",(ArrayList<? extends Parcelable>) list);
-        tabFragment.setArguments(args);
+        tabFragment.setArguments(args);*/
         return tabFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MediName = getArguments().getParcelable("list"); //전달된 데이터 받기
+      //  MediName = getArguments().getParcelable("list"); //전달된 데이터 받기
        // MediName = getArguments().getString("name");
     }
 
@@ -74,7 +75,7 @@ public class TabFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return Frag1.newInstance(MediName);  //ArrayListSend 객체를 Frag1 으로 전달
+                    return Frag1.newInstance();  // ListViewItem 객체를 Frag1 으로 전달
                 case 1:
                     return Frag2.newInstance();
                 case 2:

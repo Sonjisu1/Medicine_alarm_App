@@ -23,6 +23,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +38,8 @@ public class Frag1 extends Fragment {
 
     View view;
   ListViewItem Medname;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
 
 
@@ -76,13 +84,13 @@ public class Frag1 extends Fragment {
 
     //arguments 를 전달하는 프레그먼트 객체 생성 메소드
     // newInstance 메소드를 통해 파라미터로 필요한 데이터를 전달하고 Intent를 통해 데이터를 넘겨줌
-    public  static Frag1 newInstance(ListViewItem list){
+    public  static Frag1 newInstance(){
         Frag1 frag1 = new Frag1();
-        Bundle args = new Bundle();
-        args.putParcelable("list",list);
+       /* Bundle args = new Bundle();
+        args.putParcelable("list",list);   //list는 ListviewItem형태
         //args.putString("name1",name);
        //args.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) list);
-        frag1.setArguments(args);
+        frag1.setArguments(args);*/
         return frag1;       // fragment return
     }
 
@@ -94,26 +102,26 @@ public class Frag1 extends Fragment {
 
         showItemList();
 
-        if(Medname != null){
+       /* if(Medname != null){
 
             ListViewItem item = new ListViewItem();
             item.setTitle(Medname.getTitle());
             item.setTitle1(Medname.getTitle1());
             item.setIcon(Medname.getIcon());
-            item.setDesc(Medname.getDesc());
+
 
             list.add(item);
             recyclerImageTextAdapter.notifyDataSetChanged();
             Medname =null;
 
-        }
+        }*/
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // Medname = getArguments().getString("name1");
-        Medname = getArguments().getParcelable("list");
+        //Medname = getArguments().getParcelable("list");
         //newInstacne에서 전달된 bundle데이터를 getArguments()를 통해 받음
 
     }
@@ -123,6 +131,9 @@ public class Frag1 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.frag1,container,false); //레이아웃 지정
+
+        database=  FirebaseDatabase.getInstance(); // Firebase database 연동
+        reference =database.getReference("medicine");// DB 테이블 연결
 
 
 
@@ -137,8 +148,24 @@ public class Frag1 extends Fragment {
        // Toast.makeText(getContext(),"frage 전달",Toast.LENGTH_SHORT).show();
 
 
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    ListViewItem listViewItem = snapshot.getValue(ListViewItem.class); //Firebase에서 데이터를 ListviewItem형태로 가져옴
+                            list.add(listViewItem); //Arraylist에 저장
+                    recyclerImageTextAdapter.notifyDataSetChanged();
+                }
+            }
 
-        recyclerImageTextAdapter = new RecyclerImageTextAdapter(list);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        recyclerImageTextAdapter = new RecyclerImageTextAdapter(list); //생성자를 이용해서 list를 Adapter로 전달
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
 
         recyclerView .setAdapter(recyclerImageTextAdapter); //어뎁터 설정
@@ -226,27 +253,6 @@ public class Frag1 extends Fragment {
     }
 
 
-//리사이클러뷰 아이템 추가 함수
-    public void addItem ( String title){
-
-
-
-        ListViewItem item = new ListViewItem();
-
-        item.setTitle(title);                         //데이터 지정
-        item.setTitle1("2알");
-        item.setDesc(R.drawable.ic_person_black_24dp);
-        item.setIcon(R.drawable.ic_delete_black_24dp);
-
-
-        //Toast.makeText(getContext(),count,Toast.LENGTH_SHORT).show();
-
-        list.add(item);           //데이터 추가
-
-        recyclerImageTextAdapter.notifyDataSetChanged();
-
-
-    }
 
 
     //리사이클러뷰 클릭 이벤트를 위한 인터페이스 및 클래스

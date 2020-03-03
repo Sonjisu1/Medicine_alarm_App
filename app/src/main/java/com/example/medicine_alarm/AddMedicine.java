@@ -19,12 +19,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class AddMedicine extends AppCompatActivity {
+    FirebaseDatabase database;
+    DatabaseReference databaseReference;
     EditText edt1;
     String data;
     Spinner spinner;
+    medicineitem medicineitem;
 
 
 
@@ -47,16 +53,28 @@ public class AddMedicine extends AppCompatActivity {
 
         edt1.setText(data);  //이전 데이터를 저장
         }
+        database=  FirebaseDatabase.getInstance(); // Firebase database 연동
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
-            btnadd.setOnClickListener(new View.OnClickListener() {  //저장 버튼 클릭 시
+
+
+        btnadd.setOnClickListener(new View.OnClickListener() {  //저장 버튼 클릭 시
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddMedicine.this,MainActivity.class);
+           /*    Intent intent = new Intent(AddMedicine.this,MainActivity.class);
                 intent.putExtra("name1",edt1.getText().toString());  ///MainActivity에 데이터 전달
                 intent.putExtra("account",spinner.getSelectedItem().toString());
 
-                startActivity(intent);
+                startActivity(intent);*/
+
+              medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp,edt1.getText().toString(),spinner.getSelectedItem().toString());
+
+              databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
+              finish();
+
+
             }
         });
 
