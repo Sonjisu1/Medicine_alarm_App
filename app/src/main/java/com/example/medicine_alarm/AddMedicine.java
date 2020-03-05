@@ -72,8 +72,9 @@ public class AddMedicine extends AppCompatActivity {
 
 
         // 앞서 설정한 값으로 보여주고 값이 없으면 현재 시간을 보여줌
-        SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
-        long millis = sharedPreferences.getLong("nextNotifyTime", Calendar.getInstance().getTimeInMillis());
+       // SharedPreferences sharedPreferences = getSharedPreferences("daily alarm", MODE_PRIVATE);
+       // long millis = sharedPreferences.getLong("nextNotifyTime", Calendar.getInstance().getTimeInMillis());
+        long millis = Calendar.getInstance().getTimeInMillis();
 
         Calendar nextNotifyTime = new GregorianCalendar();
         nextNotifyTime.setTimeInMillis(millis);
@@ -83,7 +84,7 @@ public class AddMedicine extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "[처음 실행시] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
 
-        // 이전 설정값으로 TimePicker 초기화
+        // 현재시간을 보여줌
         Date currentTime = nextNotifyTime.getTime();
         SimpleDateFormat HourFormat = new SimpleDateFormat("kk", Locale.getDefault());
         SimpleDateFormat MinuteFormat = new SimpleDateFormat("mm", Locale.getDefault());
@@ -143,9 +144,9 @@ public class AddMedicine extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
                 //  Preference에 설정한 값 저장
-                SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
-                editor.putLong("nextNotifyTime", (long) calendar.getTimeInMillis());
-                editor.apply();
+              //  SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
+                //editor.putLong("nextNotifyTime", (long) calendar.getTimeInMillis());
+               // editor.apply();
 
 
                 diaryNotification(calendar);
