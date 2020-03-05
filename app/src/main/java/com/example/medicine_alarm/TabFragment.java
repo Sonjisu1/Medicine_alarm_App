@@ -79,7 +79,7 @@ public class TabFragment extends Fragment {
                 case 1:
                     return Frag2.newInstance();
                 case 2:
-                    return Frag2.newInstance();
+                    return Total.newInstance();
 
                 default:
                     return null;
