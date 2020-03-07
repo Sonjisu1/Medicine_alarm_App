@@ -189,7 +189,7 @@ public class Frag1 extends Fragment {
             public void onClick(View view, int position) {//약 수정을 위해서 클릭 시 이전 데이터가 나오게 함
 
 
-              ListViewItem item = list.get(position);
+                ListViewItem item = list.get(position);
 
 
 
@@ -210,8 +210,12 @@ public class Frag1 extends Fragment {
 
             @Override
             public void onLongClick(View view, int position) {
-                list.remove(position);
-                recyclerImageTextAdapter.notifyItemRemoved(position);
+
+                ListViewItem item = list.get(position); //현재 롱클릭한 아이템 위치
+                list.remove(position); //리사이클러뷰 아이템 삭제
+                recyclerImageTextAdapter.notifyItemRemoved(position); //리사이클러뷰에 반영
+                reference.child(item.getTitle()).removeValue(); //Firebase에 데이터 삭제
+
 
 
             }
