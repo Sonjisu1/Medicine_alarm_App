@@ -1,11 +1,13 @@
 package com.example.medicine_alarm;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     private TabFragment tabFragment; //tab을 구현하기위한 fragment
      private Frag2 frag2;
 
+     String splashvalue =null;
     ListViewItem item;
     String data;
     String account;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     private FragmentManager fm;
     private FragmentTransaction ft;
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
+
 
 
 
@@ -48,7 +52,42 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         setContentView(R.layout.activity_main);
 
 
+
+
         list = new ArrayList<>();
+        extras = getIntent().getExtras();
+
+         //splashvalue = extras.getString("dialog");
+
+      //   Toast.makeText(getApplicationContext(),splashvalue,Toast.LENGTH_SHORT);
+
+       if(extras !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
+           splashvalue = extras.getString("dialog");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this); //Notification 클릭 후 앱 실행시 dialog 나오게 함
+            builder.setTitle("약 드실 시간입니다."+ splashvalue);
+            builder.setPositiveButton("예",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getApplicationContext(),"예를 선택햇습니다.",Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+            builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            builder.show();
+        }
+
+
+
+
+
+
 
 /*        extras = getIntent().getExtras();  //AddMedicine에서 보낸 데이터 받기
         if(extras != null) {
