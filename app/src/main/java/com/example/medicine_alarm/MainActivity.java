@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
+    private CustomDialog customDialog;
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
 
 
@@ -63,7 +65,11 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
        if(extras !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
            splashvalue = extras.getString("dialog");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this); //Notification 클릭 후 앱 실행시 dialog 나오게 함
+          customDialog = new CustomDialog(this,mdelayListener, mssListener); //리스너 등록
+          customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
+
+
+           /* AlertDialog.Builder builder = new AlertDialog.Builder(this); //Notification 클릭 후 앱 실행시 dialog 나오게 함
             builder.setTitle("약 드실 시간입니다."+ splashvalue);
             builder.setPositiveButton("예",
                     new DialogInterface.OnClickListener() {
@@ -80,7 +86,9 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
                 }
             });
 
-            builder.show();
+            builder.show();*/
+
+
         }
 
 
@@ -131,6 +139,21 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         setFrag1(0);         //첫 화면
 
     }
+
+    private View.OnClickListener mdelayListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            customDialog.dismiss();
+        }
+    };
+
+    private View.OnClickListener mssListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            customDialog.dismiss();
+        }
+    };
+
     public  void setFrag1(int n) {
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction(); //프레그멘트 교체가 일어날때
