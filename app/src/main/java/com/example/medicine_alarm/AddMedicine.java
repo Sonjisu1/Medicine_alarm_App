@@ -34,16 +34,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class AddMedicine extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     EditText edt1;
     TimePicker picker;
-    String data;
+    String pre_data; //이전 데이터
+    String update_data;  //수정될 데이터
     Spinner spinner;
     medicineitem medicineitem;
+    int count=0;
+    Bundle extras=null;
+
 
 
     @Override
@@ -58,13 +64,15 @@ public class AddMedicine extends AppCompatActivity {
          picker = (TimePicker) findViewById(R.id.timepicker);
         //  Toast.makeText(getApplicationContext(),data,Toast.LENGTH_SHORT).show();
 
-        Bundle extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
+        extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
         if (extras != null) {
 
-            data = extras.getString("name1");
+            pre_data = extras.getString("name1");
 
 
-            edt1.setText(data);  //이전 데이터를 저장
+            edt1.setText(pre_data);  //이전 데이터를 저장
+
+
         }
         database = FirebaseDatabase.getInstance(); // Firebase database 연동
 
@@ -148,13 +156,33 @@ public class AddMedicine extends AppCompatActivity {
                 //editor.putLong("nextNotifyTime", (long) calendar.getTimeInMillis());
                // editor.apply();
 
+                if (extras != null) {   //리사이클러뷰 아이템 터치 시 정보를 수정할 때
+
+
+                    update_data = edt1.getText().toString(); //수정할 정보
+
+
+
+                    databaseReference.child("medicine").child(pre_data).removeValue(); //기존 데이터 삭제
+
+                    medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString());
+                    //새로운 데이터를 medicineitem 형태로
+
+                    databaseReference.child("medicine").child(update_data).setValue(medicineitem1); // Firebase에 저장
+
+                    finish();
+
+                }else{  //수정이 아닌 버튼을 이용해 추가할 때
+                    medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString());
+
+                    databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
+                    finish();
+                }
 
                 diaryNotification(calendar);
 
-                medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString());
 
-                databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
-                finish();
+
 
 
             }
@@ -172,8 +200,10 @@ public class AddMedicine extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, count, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        //알람 매니저 설정
+
 
 
         // 사용자가 매일 알람을 허용했다면
@@ -182,8 +212,12 @@ public class AddMedicine extends AppCompatActivity {
 
             if (alarmManager != null) {
 
+                //알람 반복 셋팅
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                         AlarmManager.INTERVAL_DAY, pendingIntent);
+                //AlarmManager.RTC -> real time clock으로 실제 시간 기준으로 설정
+                // calendar.getTimeInMillis -> 알람을 울릴 시간
+                //AlarmManager.INTERVAL_DAY -> 다음 알람이 울리기 전까지의 시간
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
