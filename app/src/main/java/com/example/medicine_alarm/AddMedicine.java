@@ -52,6 +52,8 @@ public class AddMedicine extends AppCompatActivity {
 
     Bundle extras=null;
 
+    private static int count=0;
+
 
 
     @Override
@@ -213,6 +215,13 @@ public class AddMedicine extends AppCompatActivity {
 
     }
 
+    public int createID() {  //다중 알람을 사용할 수 있도록 다른 id값 생성
+
+        count++;
+        return count;
+    }
+
+
     void diaryNotification(Calendar calendar) {
 //        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 //        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -222,7 +231,7 @@ public class AddMedicine extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0 , alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,createID() , alarmIntent, 0); //다중알람을 지원하기 위해 두번째 파라미터값을 각각 다르게 함
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //알람 매니저 설정
 

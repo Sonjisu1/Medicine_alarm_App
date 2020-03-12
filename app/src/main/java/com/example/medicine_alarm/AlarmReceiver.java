@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.PowerManager;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -17,15 +18,27 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //알림 표시
+        /*SharedPreferences sharedPreferences = context.getSharedPreferences("IdFile",Context.MODE_PRIVATE);
+
+
+
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        editor.putInt("id",0);
+        editor.commit();*/
+        //Notification 표시
+
+
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Notification 클릭 시 이동할 class
-        Intent notificationIntent = new Intent(context, AddMedicine.class);
-
+        Intent notificationIntent = new Intent(context, MainActivity.class);
+        notificationIntent.putExtra("dialog","dialog"); //MainActivity로 값을 전달
 
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -33,6 +46,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingI = PendingIntent.getActivity(context, 0,
                 notificationIntent, 0);
         //Notification 클릭 시 Acitivity 실행을 위해 필요
+
+
 
 
 
@@ -68,9 +83,17 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentTitle("약 먹을 시간입니다.") //보여질 타이틀
                 .setContentText("클릭 시 앱으로 이동합니다.") //타이틀 아래에 보이는 텍스트
                 .setContentInfo("INFO")
+
                 .setContentIntent(pendingI); // 앞에서 만든 pendingl을 Notification에 등록
 
         if (notificationManager != null) {
+
+            //휴대폰이 꺼져있어도 Notification이 작동하도록
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK  |
+                    PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                    PowerManager.ON_AFTER_RELEASE, "My:Tag");
+            wakeLock.acquire(5000);
 
             // 노티피케이션 등록
             notificationManager.notify(1234, builder.build());
@@ -88,8 +111,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             Date currentDateTime = nextNotifyTime.getTime();
             String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
-            Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context.getApplicationContext(),"다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
         }
 
     }
+
+
+
+
+
 }
