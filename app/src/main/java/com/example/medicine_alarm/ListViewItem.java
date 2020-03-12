@@ -8,18 +8,20 @@ public class ListViewItem implements Parcelable{
     public int iconDrawable; //아이콘
     public String Medicinename; //약이름
     public String account;     //약개수 //개수
+    public int hourofDay ; //현재 시
+    public int minute; //현재 분
 
 
     public ListViewItem(){
 
     }
 
-    public ListViewItem(int icon, String title, String title2, int  desc){
+    public ListViewItem(int icon, String title, String title2,String account,int hourofDay,int minute){
         this.iconDrawable = icon;
         this.Medicinename = title;
         this.account = title2;
-
-
+        this.hourofDay=hourofDay;
+        this.minute=minute;
     }
 
 
@@ -50,7 +52,13 @@ public class ListViewItem implements Parcelable{
        Medicinename = title ;
     }
     public void setTitle1(String title1) {account = title1;}
+    public void setHourofDay(int hourofDay){
+        this.hourofDay =hourofDay;
+    }
 
+    public void setMinute(int minute){
+        this.minute=minute;
+    }
 
     public int getIcon() {
         return this.iconDrawable ;
@@ -60,6 +68,12 @@ public class ListViewItem implements Parcelable{
     }
 
     public String getTitle1() {return this.account;}
+   public int getHourofDay(){
+        return this.hourofDay;
+    }
+    public int getMinute(){
+        return this.minute;
+    }
 
 
     @Override

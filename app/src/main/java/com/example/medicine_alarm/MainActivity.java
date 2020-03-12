@@ -34,16 +34,25 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     private FragmentTransaction ft;
     private CustomDialog customDialog;
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
+    int pre_hour;
+    int pre_minute;
+
 
 
 
 
     @Override
-    public void onInputedData(String name) {// Frag1에서 받은 데이터를 MainActivity에서 사용하기 위한 오버라이딩
+    public void onInputedData(String name,int pre_hour,int pre_minute) {// Frag1에서 받은 데이터를 MainActivity에서 사용하기 위한 오버라이딩
 
         data = name;      //받은 데이터를 data 변수에 저장
+        this.pre_hour = pre_minute;
+        this.pre_minute=pre_minute;
+
         Intent intent = new Intent(MainActivity.this, AddMedicine.class);
         intent.putExtra("name1", data);  //Addmedicine Activity에 데이터전달
+        intent.putExtra("hour",pre_hour);
+        intent.putExtra("minute",pre_minute);
+
         startActivity(intent);  //호출
 
     }
@@ -52,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toast.makeText(getApplicationContext(),"MainActivity 실행!",Toast.LENGTH_SHORT).show();
 
 
 

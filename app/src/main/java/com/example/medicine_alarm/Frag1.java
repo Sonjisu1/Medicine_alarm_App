@@ -47,6 +47,7 @@ public class Frag1 extends Fragment {
     private FragmentTransaction ft;
     RecyclerView recyclerView;
 
+
     RecyclerImageTextAdapter recyclerImageTextAdapter;
     public ArrayList<ListViewItem> list = new ArrayList<>();    // 먹을 약 알람 리스트 데이터 저장
 
@@ -56,7 +57,7 @@ public class Frag1 extends Fragment {
 
     //AddActivity에게 데이터를 전달하기위한 interface구현
     public interface onClickListenr{
-        void onInputedData(String name);
+        void onInputedData(String name,int pre_hour,int pre_minute);
     }
 
     private onClickListenr mCallback;
@@ -192,11 +193,9 @@ public class Frag1 extends Fragment {
                 ListViewItem item = list.get(position);
 
 
-
-
-                //list에 저장된 데이터를 Activity로 보냄
+                //list에 저장된 데이터를 MainActivity로 보냄
                 if(mCallback !=null) {
-                    mCallback.onInputedData(item.getTitle());
+                    mCallback.onInputedData(item.getTitle(),item.getHourofDay(),item.getMinute()); //기존의 이름과 시간
                 }
 
                /*Intent intent = new Intent(getActivity(), AddMedicine.class);

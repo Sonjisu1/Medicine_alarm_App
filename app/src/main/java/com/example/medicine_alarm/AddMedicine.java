@@ -43,11 +43,13 @@ public class AddMedicine extends AppCompatActivity {
     DatabaseReference databaseReference;
     EditText edt1;
     TimePicker picker;
+    int pre_hour; //이전 시간
+    int pre_minute; //이전 분
     String pre_data; //이전 데이터
     String update_data;  //수정될 데이터
     Spinner spinner;
     medicineitem medicineitem;
-    int count=0;
+
     Bundle extras=null;
 
 
@@ -67,10 +69,13 @@ public class AddMedicine extends AppCompatActivity {
         extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
         if (extras != null) {
 
-            pre_data = extras.getString("name1");
+            pre_data = extras.getString("name1"); //약 이름
+            pre_hour=extras.getInt("hour");      //시
+            pre_minute=extras.getInt("minute");  //분
 
 
-            edt1.setText(pre_data);  //이전 데이터를 저장
+
+            edt1.setText(pre_data);  //이전 약이름을 보여줌
 
 
         }
@@ -97,17 +102,30 @@ public class AddMedicine extends AppCompatActivity {
         SimpleDateFormat HourFormat = new SimpleDateFormat("kk", Locale.getDefault());
         SimpleDateFormat MinuteFormat = new SimpleDateFormat("mm", Locale.getDefault());
 
-        int pre_hour = Integer.parseInt(HourFormat.format(currentTime));
-        int pre_minute = Integer.parseInt(MinuteFormat.format(currentTime));
+        int pre_hour1 = Integer.parseInt(HourFormat.format(currentTime));
+        int pre_minute1 = Integer.parseInt(MinuteFormat.format(currentTime));
 
+        if(extras!=null){  //리사이클러뷰 아이템 터치 시 실행됬다면
+            if (Build.VERSION.SDK_INT >= 23) {
+                picker.setHour(pre_hour);    //전에 지정했던 시간을 보여줌
+                picker.setMinute(pre_minute); //전에 지정했던 시간을 보여줌
+            } else {
+                picker.setCurrentHour(pre_hour);
+                picker.setCurrentMinute(pre_minute);
+            }
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            picker.setHour(pre_hour);
-            picker.setMinute(pre_minute);
-        } else {
-            picker.setCurrentHour(pre_hour);
-            picker.setCurrentMinute(pre_minute);
+        }else{            //약을 새로 추가한다면
+
+            if (Build.VERSION.SDK_INT >= 23) {
+                picker.setHour(pre_hour1);       //현재시간을 보여줌
+                picker.setMinute(pre_minute1);   //현재시간을 보여줌
+            } else {
+                picker.setCurrentHour(pre_hour1);
+                picker.setCurrentMinute(pre_minute1);
+            }
+
         }
+
 
 
         btnadd.setOnClickListener(new View.OnClickListener() {  //저장 버튼 클릭 시
@@ -119,13 +137,16 @@ public class AddMedicine extends AppCompatActivity {
 
                 startActivity(intent);*/
                 int hour, hour_24, minute;
+
                 String am_pm;
                 if (Build.VERSION.SDK_INT >= 23) {
                     hour_24 = picker.getHour();
                     minute = picker.getMinute();
+
                 } else {
                     hour_24 = picker.getCurrentHour();
                     minute = picker.getCurrentMinute();
+
                 }
                 if (hour_24 > 12) {
                     am_pm = "PM";
@@ -165,7 +186,7 @@ public class AddMedicine extends AppCompatActivity {
 
                     databaseReference.child("medicine").child(pre_data).removeValue(); //기존 데이터 삭제
 
-                    medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString());
+                    medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
                     //새로운 데이터를 medicineitem 형태로
 
                     databaseReference.child("medicine").child(update_data).setValue(medicineitem1); // Firebase에 저장
@@ -173,7 +194,8 @@ public class AddMedicine extends AppCompatActivity {
                     finish();
 
                 }else{  //수정이 아닌 버튼을 이용해 추가할 때
-                    medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString());
+                    medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
+
 
                     databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
                     finish();
@@ -200,7 +222,7 @@ public class AddMedicine extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, count, alarmIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0 , alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //알람 매니저 설정
 
