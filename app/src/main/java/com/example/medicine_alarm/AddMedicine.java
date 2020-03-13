@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -49,11 +51,15 @@ public class AddMedicine extends AppCompatActivity {
     String update_data;  //수정될 데이터
     Spinner spinner;
     medicineitem medicineitem;
+    int  hour_24, minute;
+    int hour;
+
+    ArrayList<Alarmtimedata> list = new ArrayList<>(); //알람시간 추가 데이터를 저장할 Arraylist
 
     Bundle extras=null;
-
+    String am_pm;
     private static int count=0;
-
+    AlarmTimeAdd adapter;
 
 
     @Override
@@ -64,6 +70,8 @@ public class AddMedicine extends AppCompatActivity {
         Button btnadd = (Button) findViewById(R.id.btnadd);
         edt1 = (EditText) findViewById(R.id.edt1);
         spinner = (Spinner) findViewById(R.id.spinner);
+        Button timeadd = (Button) findViewById(R.id.timeAdd);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.addalarmtime);
 
          picker = (TimePicker) findViewById(R.id.timepicker);
         //  Toast.makeText(getApplicationContext(),data,Toast.LENGTH_SHORT).show();
@@ -96,7 +104,7 @@ public class AddMedicine extends AppCompatActivity {
 
         Date nextDate = nextNotifyTime.getTime();
         String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDate);
-        Toast.makeText(getApplicationContext(), "[처음 실행시] 다음 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), " 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
 
         // 현재시간을 보여줌
@@ -129,6 +137,44 @@ public class AddMedicine extends AppCompatActivity {
         }
 
 
+        timeadd.setOnClickListener(new View.OnClickListener() { //알람시간 추가하기 버튼 클릭 시
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23) {    //Timepicker에 설정된 시간 가져오기
+                    hour_24 = picker.getHour();
+                    minute = picker.getMinute();
+
+                } else {
+                    hour_24 = picker.getCurrentHour();
+                    minute = picker.getCurrentMinute();
+
+                }
+                if (hour_24 > 12) {       //오전 오후 가져오기
+                    am_pm = "오후";
+                    hour = hour_24 - 12;
+                } else {
+                    hour = hour_24;
+                    am_pm = "오전";
+                }
+
+                Alarmtimedata alarmtimedata= new Alarmtimedata(hour_24+":",minute+"",am_pm); //데이터 저장
+
+                list.add(alarmtimedata);   //데이터를 ArrayList에 저장
+
+                 adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+
+            }
+        });
+
+
+        adapter = new AlarmTimeAdd(list);//생성자를 이용해서 list를 Adapter로 전달
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); //레이아웃형식
+        recyclerView.setAdapter(adapter); //어뎁터 설정
+
+
+
 
         btnadd.setOnClickListener(new View.OnClickListener() {  //저장 버튼 클릭 시
             @Override
@@ -138,9 +184,9 @@ public class AddMedicine extends AppCompatActivity {
                 intent.putExtra("account",spinner.getSelectedItem().toString());
 
                 startActivity(intent);*/
-                int hour, hour_24, minute;
 
-                String am_pm;
+
+
                 if (Build.VERSION.SDK_INT >= 23) {
                     hour_24 = picker.getHour();
                     minute = picker.getMinute();
@@ -151,11 +197,11 @@ public class AddMedicine extends AppCompatActivity {
 
                 }
                 if (hour_24 > 12) {
-                    am_pm = "PM";
+                    am_pm = "오후";
                     hour = hour_24 - 12;
                 } else {
                     hour = hour_24;
-                    am_pm = "AM";
+                    am_pm = "오전";
                 }
 
                 // 현재 지정된 시간으로 알람 시간 설정
@@ -207,10 +253,10 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-
-
             }
         });
+
+
 
 
     }

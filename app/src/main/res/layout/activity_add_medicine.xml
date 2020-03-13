@@ -25,6 +25,17 @@
         android:layout_height="1dp"
         android:background="#555454"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -131,7 +142,15 @@
         android:id="@+id/timeAdd"></Button>
 
 
-    <TextView
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addalarmtime"/>
+
+        <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="같이 복용할 다른 약 "
@@ -162,10 +181,7 @@
 
     </LinearLayout>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/diffList"></ListView>
+
 
 
 
@@ -207,6 +223,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="저장" />
+
+    </LinearLayout>
+
+    </ScrollView>
 
 
 </LinearLayout>

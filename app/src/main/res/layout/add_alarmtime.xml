@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:background="@drawable/button_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/ampm"
+            android:gravity="right"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="TextView" />
+
+        <TextView
+        android:layout_weight="0.3"
+        android:id="@+id/hour"
+        android:textSize="20dp"
+        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+        <TextView
+            android:gravity="left"
+            android:textSize="20dp"
+            android:text="minute"
+            android:layout_weight="0.3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/minute">
+
+        </TextView>
+        <Button
+            android:layout_weight="0.1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delbtn"
+            android:background="#ffffff"
+            android:text="X"></Button>
+    </LinearLayout>
+
+
+
+</LinearLayout>
