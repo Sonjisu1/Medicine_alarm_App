@@ -19,7 +19,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -53,6 +55,8 @@ public class AddMedicine extends AppCompatActivity {
     medicineitem medicineitem;
     int  hour_24, minute;
     int hour;
+    AlarmManager alarmManager; //알람매니저
+    PendingIntent pendingIntent;
 
     ArrayList<Alarmtimedata> list = new ArrayList<>(); //알람시간 추가 데이터를 저장할 Arraylist
 
@@ -79,13 +83,17 @@ public class AddMedicine extends AppCompatActivity {
         extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
         if (extras != null) {
 
-            pre_data = extras.getString("name1"); //약 이름
-            pre_hour=extras.getInt("hour");      //시
-            pre_minute=extras.getInt("minute");  //분
+
+                pre_data = extras.getString("name1"); //약 이름
+                pre_hour=extras.getInt("hour");      //시
+                pre_minute=extras.getInt("minute");  //분
 
 
 
-            edt1.setText(pre_data);  //이전 약이름을 보여줌
+                edt1.setText(pre_data);  //이전 약이름을 보여줌
+
+
+
 
 
         }
@@ -103,8 +111,8 @@ public class AddMedicine extends AppCompatActivity {
         nextNotifyTime.setTimeInMillis(millis);
 
         Date nextDate = nextNotifyTime.getTime();
-        String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDate);
-        Toast.makeText(getApplicationContext(), " 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
+       // String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(nextDate);
+       // Toast.makeText(getApplicationContext(), " 알람은 " + date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
 
 
         // 현재시간을 보여줌
@@ -136,6 +144,21 @@ public class AddMedicine extends AppCompatActivity {
 
         }
 
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),recyclerView, new ClickListener(){
+
+            @Override
+            public void onClick(View view, int position) {
+
+                list.remove(position); //리사이클러뷰 아이템 삭제
+                adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
+                cancelAlarm(); //알람(Notification) 취소
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
         timeadd.setOnClickListener(new View.OnClickListener() { //알람시간 추가하기 버튼 클릭 시
             @Override
@@ -157,11 +180,33 @@ public class AddMedicine extends AppCompatActivity {
                     am_pm = "오전";
                 }
 
-                Alarmtimedata alarmtimedata= new Alarmtimedata(hour_24+":",minute+"",am_pm); //데이터 저장
+
+                // 현재 지정된 시간으로 알람 시간 설정
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.HOUR_OF_DAY, hour_24);
+                calendar.set(Calendar.MINUTE, minute);
+                calendar.set(Calendar.SECOND, 0);
+
+                // 이미 지난 시간을 지정했다면 다음날 같은 시간으로 설정
+                if (calendar.before(Calendar.getInstance())) {
+                    calendar.add(Calendar.DATE, 1);
+                }
+                Alarmtimedata alarmtimedata= new Alarmtimedata(hour_24+":",minute+"",am_pm); //시간 데이터 저장
 
                 list.add(alarmtimedata);   //데이터를 ArrayList에 저장
 
-                 adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+
+
+
+                adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+                diaryNotification(calendar);
+
+
+
+
 
 
             }
@@ -176,10 +221,12 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
+
+
         btnadd.setOnClickListener(new View.OnClickListener() {  //저장 버튼 클릭 시
             @Override
             public void onClick(View v) {
-           /*    Intent intent = new Intent(AddMedicine.this,MainActivity.class);
+           /* Intent intent = new Intent(AddMedicine.this,MainActivity.class);
                 intent.putExtra("name1",edt1.getText().toString());  ///MainActivity에 데이터 전달
                 intent.putExtra("account",spinner.getSelectedItem().toString());
 
@@ -187,7 +234,7 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-                if (Build.VERSION.SDK_INT >= 23) {
+               /* if (Build.VERSION.SDK_INT >= 23) {
                     hour_24 = picker.getHour();
                     minute = picker.getMinute();
 
@@ -217,9 +264,11 @@ public class AddMedicine extends AppCompatActivity {
                 }
 
                 Date currentDateTime = calendar.getTime();
+
+
                 String date_text = new SimpleDateFormat("yyyy년 MM월 dd일 EE요일 a hh시 mm분 ", Locale.getDefault()).format(currentDateTime);
                 Toast.makeText(getApplicationContext(), date_text + "으로 알람이 설정되었습니다!", Toast.LENGTH_SHORT).show();
-
+*/
                 //  Preference에 설정한 값 저장
               //  SharedPreferences.Editor editor = getSharedPreferences("daily alarm", MODE_PRIVATE).edit();
                 //editor.putLong("nextNotifyTime", (long) calendar.getTimeInMillis());
@@ -232,24 +281,39 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-                    databaseReference.child("medicine").child(pre_data).removeValue(); //기존 데이터 삭제
+                        databaseReference.child("medicine").child(pre_data).removeValue(); //기존 데이터 삭제
 
-                    medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
-                    //새로운 데이터를 medicineitem 형태로
+                        medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
+                        //새로운 데이터를 medicineitem 형태로
 
-                    databaseReference.child("medicine").child(update_data).setValue(medicineitem1); // Firebase에 저장
+                        databaseReference.child("medicine").child(update_data).setValue(medicineitem1); // Firebase에 저장
+                        finish();
 
-                    finish();
+
+
+
+
 
                 }else{  //수정이 아닌 버튼을 이용해 추가할 때
-                    medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
+
+                    if(edt1.getText().toString() !=null){
+
+                        medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
 
 
-                    databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
-                    finish();
+                        databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
+                        finish();
+
+                       Toast.makeText(getApplicationContext(),"알람이 설정되었습니다.",Toast.LENGTH_SHORT).show();
+
+
+                    }else{ //복용할 약 이름을 적지않았을 때
+                        Toast.makeText(getApplicationContext(),"복용할 약 이름을 적어주세요",Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
-                diaryNotification(calendar);
+               // diaryNotification(calendar);
 
 
 
@@ -277,8 +341,8 @@ public class AddMedicine extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,createID() , alarmIntent, 0); //다중알람을 지원하기 위해 두번째 파라미터값을 각각 다르게 함
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+         pendingIntent = PendingIntent.getBroadcast(this,createID() , alarmIntent, 0); //다중알람을 지원하기 위해 두번째 파라미터값을 각각 다르게 함
+         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //알람 매니저 설정
 
 
@@ -311,4 +375,62 @@ public class AddMedicine extends AppCompatActivity {
 
 
     }
+
+    void cancelAlarm(){  //알람 취소를 위한 함수
+        alarmManager.cancel(pendingIntent);
+
+    }
+
+
+    //리사이클러뷰 클릭 이벤트를 위한 인터페이스 및 클래스
+    public interface ClickListener{
+        void onClick(View view, int position);
+        void onLongClick(View view,int position);
+
+
+    }
+    public  static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener{
+
+        private GestureDetector gestureDetector;
+        private AddMedicine.ClickListener clickListener;
+
+        public  RecyclerTouchListener(Context context,final RecyclerView recyclerView,final AddMedicine.ClickListener clickListener){
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+
+                public boolean onSingleTapUp(MotionEvent e){
+                    return true;
+                }
+                public void onLongPress(MotionEvent e){
+                    View child = recyclerView.findChildViewUnder(e.getX(),e.getY());
+                    if(child != null && clickListener !=null){
+                        clickListener.onLongClick(child,recyclerView.getChildAdapterPosition(child));
+                    }
+                }
+            });
+        }
+
+
+
+        @Override
+        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            View child = rv.findChildViewUnder(e.getX(),e.getY());
+            if(child != null && clickListener != null && gestureDetector.onTouchEvent(e)){
+                clickListener.onClick(child,rv.getChildAdapterPosition(child));
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+    }
+
 }
