@@ -148,8 +148,26 @@ public class Frag1 extends Fragment {
       //if(Medname !=null)
        // Toast.makeText(getContext(),"frage 전달",Toast.LENGTH_SHORT).show();
 
+        reference.addValueEventListener(new ValueEventListener() {  //경로의 전체 내용에 대한 변경 사항을 읽고 수신 대기함
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    ListViewItem listViewItem = snapshot.getValue(ListViewItem.class); //Firebase에서 데이터를 ListviewItem형태로 가져옴
+                    list.add(listViewItem); //Arraylist에 저장
+                    recyclerImageTextAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        /*reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list.clear();
@@ -164,7 +182,7 @@ public class Frag1 extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         recyclerImageTextAdapter = new RecyclerImageTextAdapter(list); //생성자를 이용해서 list를 Adapter로 전달
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
@@ -214,7 +232,6 @@ public class Frag1 extends Fragment {
                 list.remove(position); //리사이클러뷰 아이템 삭제
                 recyclerImageTextAdapter.notifyItemRemoved(position); //리사이클러뷰에 반영
                 reference.child(item.getTitle()).removeValue(); //Firebase에 데이터 삭제
-
 
 
             }
