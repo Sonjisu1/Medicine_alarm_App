@@ -94,7 +94,8 @@ public class AddMedicine extends AppCompatActivity {
         reference = database.getReference("medicine");
 
         extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
-        if (extras != null) {
+
+        if (extras != null) {          //리사이클러뷰 아이템 터치해서 AddMedicine Acitivity가 실행될 때
 
 
                 pre_data = extras.getString("name1"); //약 이름
@@ -105,37 +106,48 @@ public class AddMedicine extends AppCompatActivity {
 
                 edt1.setText(pre_data);  //이전 약이름을 보여줌
 
-            Toast.makeText(getApplicationContext(),pre_data,Toast.LENGTH_SHORT).show();
 
-            reference.addChildEventListener(new ChildEventListener() { //기존에 저장했던 알람시간 가져오기
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    Alarmtimedata alarmtimedata1 = dataSnapshot.getValue(Alarmtimedata.class); //Firebase에서 데이터를 alarmtimedata형태로 가져옴
-                    list.add(alarmtimedata1); //Arraylist에 저장
-                    adapter.notifyDataSetChanged(); //변경 알림
-                }
 
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                }
+                reference.addChildEventListener(new ChildEventListener() { //기존에 저장했던 알람시간 가져오기
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                }
+                        Alarmtimedata alarmtimedata1 = dataSnapshot.getValue(Alarmtimedata.class); //Firebase에서 데이터를 alarmtimedata형태로 가져옴
+                        if(alarmtimedata1.gethour() !=null){   //Firebase내에 알람시간을 추가한 데이터가 없으면 리사이클러뷰 보여주지않음
+                            list.add(alarmtimedata1); //Arraylist에 저장
+                            adapter.notifyDataSetChanged(); //변경 알림
+                        }else{
 
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        }
 
-                }
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                }
-            });
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
 
            /*reference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -206,23 +218,47 @@ public class AddMedicine extends AppCompatActivity {
             }
 
         }
+        if(extras != null){  //리사이클러뷰 아이템 터치 시
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),recyclerView, new ClickListener(){
+                //알람시간  아이템 클릭 시 삭제 수행
 
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),recyclerView, new ClickListener(){
-            //알람시간  아이템 클릭 시 삭제 수행
+                @Override
+                public void onClick(View view, int position) {
 
-            @Override
-            public void onClick(View view, int position) {
+                   reference.child(pre_data).child("hour").removeValue(); //Firebase내의  데이터 삭제
+                   reference.child(pre_data).child("ampm").removeValue();
+                   reference.child(pre_data).child("mintue01").removeValue();
+                    list.remove(position); //리사이클러뷰 아이템 삭제
+                    adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
 
-                list.remove(position); //리사이클러뷰 아이템 삭제
-                adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
-                cancelAlarm(); //알람(Notification) 취소
-            }
+                   // cancelAlarm(); //알람(Notification) 취소
+                }
 
-            @Override
-            public void onLongClick(View view, int position) {
+                @Override
+                public void onLongClick(View view, int position) {
 
-            }
-        }));
+                }
+            }));
+
+        }else {
+            recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),recyclerView, new ClickListener(){
+                //알람시간  아이템 클릭 시 삭제 수행
+
+                @Override
+                public void onClick(View view, int position) {
+
+                    list.remove(position); //리사이클러뷰 아이템 삭제
+                    adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
+                    cancelAlarm(); //알람(Notification) 취소
+                }
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+                }
+            }));
+
+        }
 
         timeadd.setOnClickListener(new View.OnClickListener() { //알람시간 추가하기 버튼 클릭 시
             @Override
@@ -392,7 +428,7 @@ public class AddMedicine extends AppCompatActivity {
 
                     String edt = edt1.getText().toString();
 
-                    if(edt !=null){
+                    if(edt1.getText().toString() !=null){
 
                         medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
 
