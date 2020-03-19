@@ -30,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,6 +70,7 @@ public class AddMedicine extends AppCompatActivity {
     String am_pm;
     private static int count=0;
     AlarmTimeAdd adapter;
+    Alarmtimedata alarmtimedata; //알람시간추가 데이터
 
 
     @Override
@@ -105,14 +107,46 @@ public class AddMedicine extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(),pre_data,Toast.LENGTH_SHORT).show();
 
-          /*  reference.child(pre_data).addListenerForSingleValueEvent(new ValueEventListener() {
+            reference.addChildEventListener(new ChildEventListener() { //기존에 저장했던 알람시간 가져오기
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    Alarmtimedata alarmtimedata1 = dataSnapshot.getValue(Alarmtimedata.class); //Firebase에서 데이터를 alarmtimedata형태로 가져옴
+                    list.add(alarmtimedata1); //Arraylist에 저장
+                    adapter.notifyDataSetChanged(); //변경 알림
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+           /*reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     list.clear();
                     for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                        Alarmtimedata alarmtimedata1 = snapshot.getValue(Alarmtimedata.class); //Firebase에서 데이터를 ListviewItem형태로 가져옴
+
+                        Alarmtimedata alarmtimedata1 = snapshot.getValue(Alarmtimedata.class); //Firebase에서 데이터를 alarmtimedata형태로 가져옴
                         list.add(alarmtimedata1); //Arraylist에 저장
                         adapter.notifyDataSetChanged();
+
                     }
                 }
 
@@ -121,13 +155,10 @@ public class AddMedicine extends AppCompatActivity {
 
                 }
             });
-*/
-           /* adapter = new AlarmTimeAdd(list);//생성자를 이용해서 list를 Adapter로 전달
+
+            adapter = new AlarmTimeAdd(list);//생성자를 이용해서 list를 Adapter로 전달
             recyclerView.setLayoutManager(new LinearLayoutManager(this)); //레이아웃형식
-            recyclerView.setAdapter(adapter); //어뎁터 설정
-*/
-
-
+            recyclerView.setAdapter(adapter); //어뎁터 설정*/
 
 
 
@@ -177,7 +208,7 @@ public class AddMedicine extends AppCompatActivity {
         }
 
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),recyclerView, new ClickListener(){
-            //알람시간  아이템 클릭 시
+            //알람시간  아이템 클릭 시 삭제 수행
 
             @Override
             public void onClick(View view, int position) {
@@ -225,22 +256,44 @@ public class AddMedicine extends AppCompatActivity {
                 if (calendar.before(Calendar.getInstance())) {
                     calendar.add(Calendar.DATE, 1);
                 }
-                Alarmtimedata alarmtimedata= new Alarmtimedata(hour_24+":",minute+"",am_pm); //시간 데이터 저장
+                if(extras != null){ //리사이클러뷰 아이템 터치 시(수정할 때)
 
-                list.add(alarmtimedata);   //데이터를 ArrayList에 저장
+                     alarmtimedata= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
-                update_data=edt1.getText().toString(); //EditText에서 받아온 String
+                    list.add(alarmtimedata);   //데이터를 ArrayList에 저장
 
-                databaseReference.child("medicine").child(update_data).child("Alarmtime").setValue(alarmtimedata);
-
-
-
-                adapter.notifyDataSetChanged(); //데이터 변경 알려줌
-
-                diaryNotification(calendar);
+                   // update_data=edt1.getText().toString(); //EditText에서 받아온 String
 
 
+                    //databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
+                    //Firebase에 알람시간 데이터를 추가
 
+
+                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+
+
+                    diaryNotification(calendar);
+
+
+
+                }else{ //버튼으로 새로 추가할 때
+                    alarmtimedata= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
+
+                    list.add(alarmtimedata);   //데이터를 ArrayList에 저장
+
+                    update_data=edt1.getText().toString(); //EditText에서 받아온 String
+
+                   // databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
+                    //Firebase에 알람시간 데이터를 추가
+
+
+                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+                    diaryNotification(calendar);
+
+
+                }
 
 
 
@@ -248,10 +301,12 @@ public class AddMedicine extends AppCompatActivity {
         });
 
 
+
         adapter = new AlarmTimeAdd(list);//생성자를 이용해서 list를 Adapter로 전달
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this)); //레이아웃형식
         recyclerView.setAdapter(adapter); //어뎁터 설정
+        //리사이클러뷰로 표현
 
 
 
@@ -314,16 +369,23 @@ public class AddMedicine extends AppCompatActivity {
 
                     update_data = edt1.getText().toString(); //수정할 정보
 
+                    databaseReference.child("medicine").child(pre_data).removeValue(); //기존 데이터 삭제
 
+                    databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
+                    //Firebase에 알람시간 데이터를 추가
 
-
-                    // databaseReference.child("medicine").child(pre_data).removeValue(); //기존 데이터 삭제
-
-                       // medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
+                    // medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
                         //새로운 데이터를 medicineitem 형태로
+                    Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 추가
+                    update.put("Medicinename", edt1.getText().toString());  //약 이름
+                    update.put("account",spinner.getSelectedItem().toString());  // 수량
+                    update.put("hourofDay",hour_24);                            //시
+                    update.put("iconDrawable",R.drawable.ic_access_alarm_black_24dp);  // 아이콘
+                    update.put("minute",minute);                                 //분
 
+                    reference.child(edt1.getText().toString()).updateChildren(update);  //Firbase에 적용
 
-                   // databaseReference.child("medicine").child(update_data).setValue(medicineitem1); // Firebase에 저장
+                   // databaseReference.child("medicine").child(update_data).setValue(); // Firebase에 저장
                         finish();
 
                 }else{  //수정이 아닌 버튼을 이용해 추가할 때
@@ -334,20 +396,14 @@ public class AddMedicine extends AppCompatActivity {
 
                         medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
 
-                        Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 변경
+                        databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
+                        Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 추가
                         update.put("Medicinename", edt1.getText().toString());
                         update.put("account",spinner.getSelectedItem().toString());
                         update.put("hourofDay",hour_24);
                         update.put("iconDrawable",R.drawable.ic_access_alarm_black_24dp);
                         update.put("minute",minute);
                         reference.child(edt1.getText().toString()).updateChildren(update);  //Firbase에 적용
-
-
-                     /*   Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 변경
-                        update.put("answercontents",answercontentsvalue);   // "answercontents" 안에 내용을 미답변에서 적은답변내용으로 변경
-                        update.put("answer","답변완료");
-                        reference.child(existingwriter).updateChildren(update);  //Firbase에 적용
-*/
 
                         //databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
                         finish();
