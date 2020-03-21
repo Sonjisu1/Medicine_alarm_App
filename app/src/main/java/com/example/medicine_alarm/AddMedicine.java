@@ -309,7 +309,7 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-                    diaryNotification(calendar);
+                    diaryNotification(calendar,edt1.getText().toString());
 
 
 
@@ -326,7 +326,7 @@ public class AddMedicine extends AppCompatActivity {
 
                     adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
-                    diaryNotification(calendar);
+                    diaryNotification(calendar, update_data);
 
 
                 }
@@ -472,7 +472,7 @@ public class AddMedicine extends AppCompatActivity {
     }
 
 
-    void diaryNotification(Calendar calendar) {
+    void diaryNotification(Calendar calendar,String name) {
 //        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 //        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 //        Boolean dailyNotify = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DAILY_NOTIFICATION, true);
@@ -481,7 +481,11 @@ public class AddMedicine extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        alarmIntent.putExtra("medicinename",name); //Notification에 띄울 약 이름 전달
          pendingIntent = PendingIntent.getBroadcast(this,createID() , alarmIntent, 0); //다중알람을 지원하기 위해 두번째 파라미터값을 각각 다르게 함
+        //getActivity를 사용하면 바로 Activity로 가기 때문에 getBroadcast를 사용해서 알람이 울릴 시간에
+        //AlarmReceiver로 보낸다.
+
          alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         //알람 매니저 설정
 
@@ -492,14 +496,14 @@ public class AddMedicine extends AppCompatActivity {
 
 
             if (alarmManager != null) {
-
+/*
                 //알람 반복 셋팅
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                         AlarmManager.INTERVAL_DAY, pendingIntent);
                 //AlarmManager.RTC -> real time clock으로 실제 시간 기준으로 설정
                 // calendar.getTimeInMillis -> 알람을 울릴 시간
-                //AlarmManager.INTERVAL_DAY -> 다음 알람이 울리기 전까지의 시간
-
+                //AlarmManager.INTERVAL_DAY -> 다음 알람이 울리기 전까지의 시
+*/
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 }
@@ -526,7 +530,6 @@ public class AddMedicine extends AppCompatActivity {
     public interface ClickListener{
         void onClick(View view, int position);
         void onLongClick(View view,int position);
-
 
     }
     public  static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener{

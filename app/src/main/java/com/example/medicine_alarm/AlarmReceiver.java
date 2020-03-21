@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.widget.Toast;
 
@@ -18,6 +19,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    String name;
 
 
 
@@ -32,13 +35,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         editor.putInt("id",0);
         editor.commit();*/
         //Notification 표시
+        Bundle bundle = intent.getExtras(); //alarmIntent에서 보낸 데이터 전달받음
+        if(bundle != null){
+            name = bundle.getString("medicinename");
+        }
 
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Notification 클릭 시 이동할 class
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        notificationIntent.putExtra("dialog","dialog"); //MainActivity로 값을 전달
+        notificationIntent.putExtra("medicinename1", name); //알람이 설정된 약 이름을 MainActivity로 값을 전달
 
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -80,7 +87,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setWhen(System.currentTimeMillis())
 
                 .setTicker("{Time to watch some cool stuff!}")
-                .setContentTitle("약 먹을 시간입니다.") //보여질 타이틀
+                .setContentTitle(name+"드실 시간입니다.") //보여질 타이틀
                 .setContentText("클릭 시 앱으로 이동합니다.") //타이틀 아래에 보이는 텍스트
                 .setContentInfo("INFO")
 
