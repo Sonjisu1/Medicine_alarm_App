@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.DirectAction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     private TabFragment tabFragment; //tab을 구현하기위한 fragment
      private Frag2 frag2;
 
-     String splashvalue =null;
+     String value;
     ListViewItem item;
     String data;
     String account;
@@ -48,12 +49,16 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         this.pre_hour = pre_minute;
         this.pre_minute=pre_minute;
 
-        Intent intent = new Intent(MainActivity.this, AddMedicine.class);
-        intent.putExtra("name1", data);  //Addmedicine Activity에 데이터전달
-        intent.putExtra("hour",pre_hour);
-        intent.putExtra("minute",pre_minute);
 
-        startActivity(intent);  //호출
+
+            Intent intent = new Intent(MainActivity.this, AddMedicine.class);
+            intent.putExtra("name1", data);  //Addmedicine Activity에 데이터전달
+            intent.putExtra("hour",pre_hour);
+            intent.putExtra("minute",pre_minute);
+
+            startActivity(intent);  //호출
+
+
 
     }
 
@@ -62,21 +67,28 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(getApplicationContext(),"MainActivity 실행!",Toast.LENGTH_SHORT).show();
-
 
 
 
         list = new ArrayList<>();
         extras = getIntent().getExtras();
 
+
+
+
          //splashvalue = extras.getString("dialog");
 
       //   Toast.makeText(getApplicationContext(),splashvalue,Toast.LENGTH_SHORT);
 
-       if(extras !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
-           splashvalue = extras.getString("dialog");
-          customDialog = new CustomDialog(this,mdelayListener, mssListener); //리스너 등록
+
+        Intent intent1 = getIntent();
+        if(intent1 !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
+
+
+           //value = extras.getString("medicinename1"); //약 이름 전달 받기
+            value=intent1.getStringExtra("medicine");
+           Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
+          customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
           customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
 
 

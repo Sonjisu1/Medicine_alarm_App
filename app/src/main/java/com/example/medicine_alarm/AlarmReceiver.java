@@ -29,8 +29,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         /*SharedPreferences sharedPreferences = context.getSharedPreferences("IdFile",Context.MODE_PRIVATE);
 
-
-
         SharedPreferences.Editor editor= sharedPreferences.edit();
         editor.putInt("id",0);
         editor.commit();*/
@@ -40,26 +38,31 @@ public class AlarmReceiver extends BroadcastReceiver {
             name = bundle.getString("medicinename");
         }
 
+        Toast.makeText(context,"도착",Toast.LENGTH_SHORT).show();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Notification 클릭 시 이동할 class
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        notificationIntent.putExtra("medicinename1", name); //알람이 설정된 약 이름을 MainActivity로 값을 전달
 
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP |
+                Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        notificationIntent.putExtra("medicine", name); //알람이 설정된 약 이름을 MainActivity로 값을 전달
+
 
         PendingIntent pendingI = PendingIntent.getActivity(context, 0,
                 notificationIntent, 0);
+
+
         //Notification 클릭 시 Acitivity 실행을 위해 필요
 
 
-
-
-
         //콘텐츠와 채널 설정
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
+
 
 
         //OREO API 26 이상에서는 채널 필요
@@ -87,7 +90,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setWhen(System.currentTimeMillis())
 
                 .setTicker("{Time to watch some cool stuff!}")
-                .setContentTitle(name+"드실 시간입니다.") //보여질 타이틀
+                .setContentTitle(name+" 드실 시간입니다.") //보여질 타이틀
                 .setContentText("클릭 시 앱으로 이동합니다.") //타이틀 아래에 보이는 텍스트
                 .setContentInfo("INFO")
 
@@ -105,6 +108,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             // 노티피케이션 등록
             notificationManager.notify(1234, builder.build());
 
+          //  context.startActivity(notificationIntent);
 
             Calendar nextNotifyTime = Calendar.getInstance();
 

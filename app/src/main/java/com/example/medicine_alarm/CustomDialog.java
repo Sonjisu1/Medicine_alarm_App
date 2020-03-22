@@ -6,18 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import org.w3c.dom.Text;
 
 public class CustomDialog extends Dialog {
     private View.OnClickListener mDelayListener;
     private View.OnClickListener mSsListener;
+    String name;
 
-    public CustomDialog(@NonNull Context context, View.OnClickListener mDelayListener, View.OnClickListener mSsListener)
+    public CustomDialog(@NonNull Context context, View.OnClickListener mDelayListener, View.OnClickListener mSsListener,String name)
      {
         super(context);
         this.mDelayListener = mDelayListener;
         this.mSsListener=mSsListener;
+        this.name=name;
     }
 
     @Override
@@ -32,11 +37,13 @@ public class CustomDialog extends Dialog {
 
         setContentView(R.layout.custom_dialog);
 
-        Button delay = (Button)findViewById(R.id.delay);
+        TextView medicinename = (TextView) findViewById(R.id.medicinename);
+        Button cancel = (Button)findViewById(R.id.delay);
         Button ss = (Button) findViewById(R.id.ss);
 
-        delay.setOnClickListener(mDelayListener); //클릭 리스너
+        cancel.setOnClickListener(mDelayListener); //클릭 리스너
         ss.setOnClickListener(mSsListener);   //클릭 리스너
+        medicinename.setText(name);
 
 
 
