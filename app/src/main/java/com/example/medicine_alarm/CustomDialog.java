@@ -43,7 +43,7 @@ public class CustomDialog extends Dialog {
 
         cancel.setOnClickListener(mDelayListener); //클릭 리스너
         ss.setOnClickListener(mSsListener);   //클릭 리스너
-        medicinename.setText(name);
+        medicinename.setText(name); //AlarmReceiver에서 받은 약 이름 데이터를 보여줌
 
 
 

@@ -51,11 +51,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         notificationIntent.putExtra("medicine", name); //알람이 설정된 약 이름을 MainActivity로 값을 전달
 
+        //context.startActivity(notificationIntent);
 
         PendingIntent pendingI = PendingIntent.getActivity(context, 0,
-                notificationIntent, 0);
-
-
+                notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         //Notification 클릭 시 Acitivity 실행을 위해 필요
 
 

@@ -82,11 +82,10 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
 
         Intent intent1 = getIntent();
-        if(intent1 !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
+        if(extras !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
 
+            value=intent1.getStringExtra("medicine");  //약 이름 전달 받기
 
-           //value = extras.getString("medicinename1"); //약 이름 전달 받기
-            value=intent1.getStringExtra("medicine");
            Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
           customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
           customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함

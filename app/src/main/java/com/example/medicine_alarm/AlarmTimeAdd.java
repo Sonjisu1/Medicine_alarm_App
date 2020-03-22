@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,23 +43,17 @@ public class AlarmTimeAdd extends RecyclerView.Adapter<AlarmTimeAdd.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlarmTimeAdd.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final AlarmTimeAdd.ViewHolder holder, final int position) {
 
         Alarmtimedata item = mData.get(position);
 
 
 
         holder.hour.setText(item.gethour());
-        holder.minute.setText(item.getMinute());
-        holder.ampm.setText(item.getAmpm());
-        Button delbtn = holder.delbtn;
+        holder.minute.setText(item.getMintue01());
 
-        /*delbtn.setOnClickListener(new View.OnClickListener() { //아이템 안에 버튼 클릭 시 아이템 삭제
-            @Override
-            public void onClick(View v) {
-                mData.remove(position);
-            }
-        });*/
+        holder.ampm.setText(item.getAmpm());
+
 
 
 
@@ -71,7 +66,7 @@ public class AlarmTimeAdd extends RecyclerView.Adapter<AlarmTimeAdd.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        Button delbtn;
+
         TextView ampm;
         TextView minute;
         TextView hour;
@@ -79,7 +74,7 @@ public class AlarmTimeAdd extends RecyclerView.Adapter<AlarmTimeAdd.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            delbtn=itemView.findViewById(R.id.delbtn);
+
             minute= itemView.findViewById(R.id.minute);
             hour = itemView.findViewById(R.id.hour);
             ampm=itemView.findViewById(R.id.ampm);
