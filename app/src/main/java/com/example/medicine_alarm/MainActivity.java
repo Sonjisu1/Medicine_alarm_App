@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
     int pre_hour;
     int pre_minute;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+
+
 
 
 
@@ -62,6 +68,16 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) { // Acitivity가 이미 생성된 경우 onNewIntent를 오버라이딩
+        //재사용되는 액팁비티에서 intent를 사용하도록
+        value=intent.getStringExtra("medicine");  //약 이름 전달 받기
+
+        Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
+        customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
+        customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
+        super.onNewIntent(intent);
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +91,11 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
 
 
+        database=  FirebaseDatabase.getInstance(); // Firebase database 연동
+        reference =database.getReference("medicine");// DB 테이블 연결
 
-         //splashvalue = extras.getString("dialog");
+
+        //splashvalue = extras.getString("dialog");
 
       //   Toast.makeText(getApplicationContext(),splashvalue,Toast.LENGTH_SHORT);
 
@@ -86,29 +105,9 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
             value=intent1.getStringExtra("medicine");  //약 이름 전달 받기
 
-           Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
-          customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
-          customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
-
-
-           /* AlertDialog.Builder builder = new AlertDialog.Builder(this); //Notification 클릭 후 앱 실행시 dialog 나오게 함
-            builder.setTitle("약 드실 시간입니다."+ splashvalue);
-            builder.setPositiveButton("예",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getApplicationContext(),"예를 선택햇습니다.",Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
-            builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-
-            builder.show();*/
+            Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
+            customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
+            customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
 
 
         }
@@ -162,16 +161,20 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
     }
 
+
+
     private View.OnClickListener mdelayListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             customDialog.dismiss();
         }
     };
 
-    private View.OnClickListener mssListener = new View.OnClickListener() {
+    private View.OnClickListener mssListener = new View.OnClickListener() { //복용 버튼을 터치 시
         @Override
         public void onClick(View v) {
+
             customDialog.dismiss();
         }
     };
