@@ -21,6 +21,7 @@ import java.util.Locale;
 public class AlarmReceiver extends BroadcastReceiver {
 
     String name;
+    String account;
 
 
 
@@ -36,9 +37,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         Bundle bundle = intent.getExtras(); //alarmIntent에서 보낸 데이터 전달받음
         if(bundle != null){
             name = bundle.getString("medicinename");
+            account=bundle.getString("account");
+
         }
 
-        Toast.makeText(context,"도착",Toast.LENGTH_SHORT).show();
+
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -50,6 +53,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         notificationIntent.putExtra("medicine", name); //알람이 설정된 약 이름을 MainActivity로 값을 전달
+        notificationIntent.putExtra("account",account);//약 개수를 전달
 
         //context.startActivity(notificationIntent);
 

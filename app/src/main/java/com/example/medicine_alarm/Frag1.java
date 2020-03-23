@@ -57,7 +57,7 @@ public class Frag1 extends Fragment {
 
     //AddActivity에게 데이터를 전달하기위한 interface구현
     public interface onClickListenr{
-        void onInputedData(String name,int pre_hour,int pre_minute);
+        void onInputedData(String name,int pre_hour,int pre_minute,String account);
     }
 
     private onClickListenr mCallback;
@@ -137,8 +137,6 @@ public class Frag1 extends Fragment {
         reference =database.getReference("medicine");// DB 테이블 연결
 
 
-
-
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
         CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView2); //달력
         TextView MonthDay = (TextView) view.findViewById(R.id.calendar);
@@ -166,23 +164,6 @@ public class Frag1 extends Fragment {
             }
         });
 
-
-        /*reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    ListViewItem listViewItem = snapshot.getValue(ListViewItem.class); //Firebase에서 데이터를 ListviewItem형태로 가져옴
-                            list.add(listViewItem); //Arraylist에 저장
-                    recyclerImageTextAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
 
         recyclerImageTextAdapter = new RecyclerImageTextAdapter(list); //생성자를 이용해서 list를 Adapter로 전달
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
@@ -213,7 +194,7 @@ public class Frag1 extends Fragment {
 
                 //list에 저장된 데이터를 MainActivity로 보냄
                 if(mCallback !=null) {
-                    mCallback.onInputedData(item.getTitle(),item.getHourofDay(),item.getMinute()); //기존의 이름과 시간
+                    mCallback.onInputedData(item.getTitle(),item.getHourofDay(),item.getMinute(),item.getTitle1()); //기존의 이름과 시간
                 }
 
                /*Intent intent = new Intent(getActivity(), AddMedicine.class);

@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
      String value;
     ListViewItem item;
     String data;
-    String account;
+    String account; //약 개수
+    String account1;
     String MedicineName;
     ArrayList<ListViewItem> list;
     private BottomNavigationView bottomNavigationView;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
     int pre_hour;
     int pre_minute;
+
     FirebaseDatabase database;
     DatabaseReference reference;
 
@@ -49,18 +51,18 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
 
     @Override
-    public void onInputedData(String name,int pre_hour,int pre_minute) {// Frag1에서 받은 데이터를 MainActivity에서 사용하기 위한 오버라이딩
+    public void onInputedData(String name,int pre_hour,int pre_minute,String account) {// Frag1에서 받은 데이터를 MainActivity에서 사용하기 위한 오버라이딩
 
         data = name;      //받은 데이터를 data 변수에 저장
         this.pre_hour = pre_minute;
         this.pre_minute=pre_minute;
-
-
+        this.account=account;
 
             Intent intent = new Intent(MainActivity.this, AddMedicine.class);
             intent.putExtra("name1", data);  //Addmedicine Activity에 데이터전달
             intent.putExtra("hour",pre_hour);
             intent.putExtra("minute",pre_minute);
+            intent.putExtra("account",this.account);
 
             startActivity(intent);  //호출
 
@@ -72,9 +74,12 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     protected void onNewIntent(Intent intent) { // Acitivity가 이미 생성된 경우 onNewIntent를 오버라이딩
         //재사용되는 액팁비티에서 intent를 사용하도록
         value=intent.getStringExtra("medicine");  //약 이름 전달 받기
+        account1 =intent.getStringExtra("account");
 
-        Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
-        customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
+
+        Toast.makeText(getApplicationContext(),account1+"",Toast.LENGTH_SHORT).show();
+
+        customDialog = new CustomDialog(this,mdelayListener, mssListener,value,account1); //리스너 등록
         customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
         super.onNewIntent(intent);
     }
@@ -82,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
 
         list = new ArrayList<>();
@@ -104,9 +107,10 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         if(extras !=null){ //Notification 생성 후 AlarmReceiver에서 값을 얻어옴
 
             value=intent1.getStringExtra("medicine");  //약 이름 전달 받기
+            account1 =intent1.getStringExtra("account"); //약 개수 전달 받기
 
-            Toast.makeText(getApplicationContext(),value+"",Toast.LENGTH_SHORT).show();
-            customDialog = new CustomDialog(this,mdelayListener, mssListener,value); //리스너 등록
+            Toast.makeText(getApplicationContext(),account1+"",Toast.LENGTH_SHORT).show();
+            customDialog = new CustomDialog(this,mdelayListener, mssListener,value,account1); //리스너 등록
             customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
 
 

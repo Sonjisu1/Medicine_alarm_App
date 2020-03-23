@@ -69,6 +69,7 @@ public class AddMedicine extends AppCompatActivity {
     Bundle extras=null;
     String am_pm;
     private static int count=0;
+    String account;
     AlarmTimeAdd adapter;
     Alarmtimedata alarmtimedata; //알람시간추가 데이터
 
@@ -101,10 +102,13 @@ public class AddMedicine extends AppCompatActivity {
                 pre_data = extras.getString("name1"); //약 이름
                 pre_hour=extras.getInt("hour");      //시
                 pre_minute=extras.getInt("minute");  //분
+            account=extras.getString("account"); //약 개수
+
 
 
 
                 edt1.setText(pre_data);  //이전 약이름을 보여줌
+
 
 
 
@@ -309,7 +313,7 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-                    diaryNotification(calendar,edt1.getText().toString());
+                    diaryNotification(calendar,edt1.getText().toString(),account);
 
 
 
@@ -326,7 +330,7 @@ public class AddMedicine extends AppCompatActivity {
 
                     adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
-                    diaryNotification(calendar, update_data);
+                    diaryNotification(calendar, update_data,spinner.getSelectedItem().toString());
 
 
                 }
@@ -472,7 +476,7 @@ public class AddMedicine extends AppCompatActivity {
     }
 
 
-    void diaryNotification(Calendar calendar,String name) {
+    void diaryNotification(Calendar calendar,String name,String account) {
 //        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 //        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 //        Boolean dailyNotify = sharedPref.getBoolean(SettingsActivity.KEY_PREF_DAILY_NOTIFICATION, true);
@@ -481,7 +485,8 @@ public class AddMedicine extends AppCompatActivity {
         PackageManager pm = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        alarmIntent.putExtra("medicinename",name); //Notification에 띄울 약 이름 전달
+        alarmIntent.putExtra("medicinename",name); //Notification터치 시 실행되는 Custom Dialog에  띄울 약 이름 전달
+        alarmIntent.putExtra("account",account);   //Notification터치 시 실행되는 Custom Dialog에  띄울 약 개수 전달
          pendingIntent = PendingIntent.getBroadcast(this,createID() , alarmIntent, 0); //다중알람을 지원하기 위해 두번째 파라미터값을 각각 다르게 함
         //getActivity를 사용하면 바로 Activity로 가기 때문에 getBroadcast를 사용해서 알람이 울릴 시간에
         //AlarmReceiver로 보낸다.

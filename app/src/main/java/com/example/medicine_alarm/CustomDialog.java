@@ -16,13 +16,15 @@ public class CustomDialog extends Dialog {
     private View.OnClickListener mDelayListener;
     private View.OnClickListener mSsListener;
     String name;
+    String account;
 
-    public CustomDialog(@NonNull Context context, View.OnClickListener mDelayListener, View.OnClickListener mSsListener,String name)
+    public CustomDialog(@NonNull Context context, View.OnClickListener mDelayListener, View.OnClickListener mSsListener,String name,String account)
      {
         super(context);
         this.mDelayListener = mDelayListener;
         this.mSsListener=mSsListener;
         this.name=name;
+        this.account=account;
     }
 
     @Override
@@ -38,12 +40,15 @@ public class CustomDialog extends Dialog {
         setContentView(R.layout.custom_dialog);
 
         TextView medicinename = (TextView) findViewById(R.id.medicinename);
+        TextView medicineaccount = (TextView)findViewById(R.id.medicineacccount);
         Button cancel = (Button)findViewById(R.id.delay);
         Button ss = (Button) findViewById(R.id.ss);
 
         cancel.setOnClickListener(mDelayListener); //클릭 리스너
         ss.setOnClickListener(mSsListener);   //클릭 리스너
         medicinename.setText(name); //AlarmReceiver에서 받은 약 이름 데이터를 보여줌
+        medicineaccount.setText(account); //AlarmRecevier에서 받은 약 개수 데이터 보여줌
+
 
 
 
