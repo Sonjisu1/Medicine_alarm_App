@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.DirectAction;
 import android.content.DialogInterface;
@@ -16,10 +17,15 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Frag1.onClickListenr{
 
@@ -33,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     String account1;
     String MedicineName;
     ArrayList<ListViewItem> list;
+    ArrayList<Totaldata> totallist;
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
@@ -40,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     Bundle extras; //Intent를 통한 데이터를 받기 위한 Bundle
     int pre_hour;
     int pre_minute;
+
 
     FirebaseDatabase database;
     DatabaseReference reference;
@@ -67,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
             startActivity(intent);  //호출
 
 
-
     }
 
     @Override
@@ -80,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         Toast.makeText(getApplicationContext(),account1+"",Toast.LENGTH_SHORT).show();
 
         customDialog = new CustomDialog(this,mdelayListener, mssListener,value,account1); //리스너 등록
+        customDialog.setCancelable(false); //dialog 뒷배경 터치 시 종료x
         customDialog.show();//Notification 클릭 후 앱 실행시 dialog 나오게 함
         super.onNewIntent(intent);
     }
@@ -167,19 +175,26 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
 
 
-    private View.OnClickListener mdelayListener = new View.OnClickListener() {
+    private View.OnClickListener mdelayListener = new View.OnClickListener() { //복용 버튼 터치 시
         @Override
         public void onClick(View v) {
+            Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 변경
+               // iconDrawable 내에 이미지를 변경
 
-            customDialog.dismiss();
+            customDialog.dismiss(); //dialog 종료
         }
     };
 
     private View.OnClickListener mssListener = new View.OnClickListener() { //복용 버튼을 터치 시
         @Override
         public void onClick(View v) {
+            Map<String,Object> update = new HashMap<>(); //해쉬맵을 사용해서 데이터 값을 변경
+            update.put("iconDrawable",R.drawable.ic_check_circle_black_24dp); //복용 버튼 터치 시 아이콘 바뀜
+            reference.child(value).updateChildren(update); //변경된 내용 파이어베이스에 저장
 
-            customDialog.dismiss();
+
+            customDialog.dismiss(); //dialog 종료
+
         }
     };
 
