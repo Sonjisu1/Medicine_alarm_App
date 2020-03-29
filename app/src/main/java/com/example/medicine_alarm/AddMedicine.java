@@ -63,6 +63,7 @@ public class AddMedicine extends AppCompatActivity {
     PendingIntent pendingIntent;
 
     DatabaseReference reference;
+
     ArrayList<Alarmtimedata> list = new ArrayList<>(); //알람시간 추가 데이터를 저장할 Arraylist
 
     RecyclerView recyclerView;
@@ -414,12 +415,14 @@ public class AddMedicine extends AppCompatActivity {
                     databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
                     //Firebase에 알람시간 데이터를 추가
 
+
                     // medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
                         //새로운 데이터를 medicineitem 형태로
                     Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 추가
                     update.put("Medicinename", edt1.getText().toString());  //약 이름
                     update.put("account",spinner.getSelectedItem().toString());  // 수량
                     update.put("hourofDay",hour_24);                            //시
+
                     update.put("iconDrawable",R.drawable.ic_access_alarm_black_24dp);  // 아이콘
                     update.put("minute",minute);                                 //분
 
@@ -432,8 +435,12 @@ public class AddMedicine extends AppCompatActivity {
 
                     String edt = edt1.getText().toString();
 
-                    if(edt1.getText().toString() !=null){
+                    if(edt1.getText().toString().equals("")){ //복용할 약 이름을 적지않았을 때 (EditText가 공백일 때)
 
+                       Toast.makeText(getApplicationContext(),"복용할 약 이름을 적어주세요.",Toast.LENGTH_SHORT).show();
+
+
+                    }else{ // EditText가 공백이 아닐 때
                         medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
 
                         databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
@@ -448,11 +455,8 @@ public class AddMedicine extends AppCompatActivity {
                         //databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
                         finish();
 
-                       Toast.makeText(getApplicationContext(),"알람이 설정되었습니다.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"알람이 설정되었습니다.",Toast.LENGTH_SHORT).show();
 
-
-                    }else{ //복용할 약 이름을 적지않았을 때
-                        Toast.makeText(getApplicationContext(),"복용할 약 이름을 적어주세요",Toast.LENGTH_SHORT).show();
                     }
 
                 }
