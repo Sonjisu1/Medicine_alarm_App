@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -46,6 +47,7 @@ public class Frag1 extends Fragment {
     private FragmentManager fm;
     private FragmentTransaction ft;
     RecyclerView recyclerView;
+
 
 
     RecyclerImageTextAdapter recyclerImageTextAdapter;
@@ -138,7 +140,7 @@ public class Frag1 extends Fragment {
 
 
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
-        CalendarView calendarView = (CalendarView) view.findViewById(R.id.calendarView2); //달력
+
         TextView MonthDay = (TextView) view.findViewById(R.id.calendar);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclelist);
 
@@ -177,8 +179,6 @@ public class Frag1 extends Fragment {
             addItem(Medname);
         }
 */
-
-
 
 
 

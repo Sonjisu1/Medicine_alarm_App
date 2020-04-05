@@ -77,9 +77,8 @@ public class TabFragment extends Fragment {
                 case 0:
                     return Frag1.newInstance();  // ListViewItem 객체를 Frag1 으로 전달
                 case 1:
-                    return Frag2.newInstance();
-                case 2:
                     return Total.newInstance();
+
 
                 default:
                     return null;
@@ -89,7 +88,7 @@ public class TabFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
         //탭 레이아웃에 이름을 선언
         @Nullable
@@ -97,11 +96,10 @@ public class TabFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Monday";
+                    return "알람";
                 case 1:
-                    return "Tuseday";
-                case 2:
-                    return "Wedsday";
+                    return "총 수량";
+
 
                 default:
                     return null;

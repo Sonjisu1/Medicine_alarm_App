@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
     String account1;
     String MedicineName;
     ArrayList<ListViewItem> list;
-    ArrayList<Totaldata> totallist;
+    ArrayList<TotalquantityData> totallist;
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
 
 
 
-    private View.OnClickListener mdelayListener = new View.OnClickListener() { //복용 버튼 터치 시
+    private View.OnClickListener mdelayListener = new View.OnClickListener() { //취소 버튼 클릭 시
         @Override
         public void onClick(View v) {
             Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 변경
@@ -191,6 +191,10 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
             Map<String,Object> update = new HashMap<>(); //해쉬맵을 사용해서 데이터 값을 변경
             update.put("iconDrawable",R.drawable.ic_check_circle_black_24dp); //복용 버튼 터치 시 아이콘 바뀜
             reference.child(value).updateChildren(update); //변경된 내용 파이어베이스에 저장
+
+
+
+
 
 
             customDialog.dismiss(); //dialog 종료

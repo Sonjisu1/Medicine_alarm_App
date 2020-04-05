@@ -11,27 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class TotalAdapter extends RecyclerView.Adapter<TotalAdapter.ViewHolder> {
+public class TotalquantitiyAdapter extends RecyclerView.Adapter<TotalquantitiyAdapter.ViewHolder> {
 
+    ArrayList<TotalquantityData> mData = new ArrayList<>();
+    // java.lang.NullPointerException: Attempt to invoke virtual method 'int java.util.ArrayList.size()' on a null object reference
 
-    ArrayList<TotalData> mData = new ArrayList<TotalData>() ;
-
-    TotalAdapter(){
-
-    }
-    TotalAdapter(ArrayList<TotalData> list){
+    TotalquantitiyAdapter(ArrayList<TotalquantityData> list){
         mData=list;
     }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         Context context = parent.getContext();
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.totalitem,parent,false);
 
 
-        TotalAdapter.ViewHolder vh = new TotalAdapter.ViewHolder(view);
+        TotalquantitiyAdapter.ViewHolder vh = new TotalquantitiyAdapter.ViewHolder(view);
         //뷰홀더로 감쌈
 
 
@@ -42,10 +40,10 @@ public class TotalAdapter extends RecyclerView.Adapter<TotalAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        TotalData totalData = mData.get(position);
+        TotalquantityData totalquantityData = mData.get(position);
 
-        holder.Medicinename.setText(totalData.getMedicinename());
-        holder.Totalaccount.setText(totalData.getTotalaccount());
+        holder.Medicinename.setText(totalquantityData.getMedicinename());
+        holder.Totalaccount.setText(totalquantityData.getTotalaccount());
 
 
 
@@ -53,17 +51,19 @@ public class TotalAdapter extends RecyclerView.Adapter<TotalAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return (mData !=  null ? mData.size() : 0);
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView Medicinename;
         TextView Totalaccount;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            Medicinename = itemView.findViewById(R.id.medicineName);
-            Totalaccount= itemView.findViewById(R.id.account);
+            Medicinename = itemView.findViewById(R.id.Medicinename);
+            Totalaccount = itemView.findViewById(R.id.Totalaccount);
         }
     }
 }

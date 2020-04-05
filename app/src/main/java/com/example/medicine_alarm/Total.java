@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,8 +25,9 @@ public class Total extends Fragment {
 
     FirebaseDatabase database;
     DatabaseReference reference;
-    ArrayList<TotalData> list;
-    TotalAdapter adapter;
+    TotalquantitiyAdapter adapter;
+    ArrayList<TotalquantityData> list;
+
 
     View view;
 
@@ -40,37 +42,37 @@ public class Total extends Fragment {
         view = inflater.inflate(R.layout.total,container,false);
 
         RecyclerView recyclerView= view.findViewById(R.id.totalrecyclerview);
-        list= new ArrayList<>();
+
+        list = new ArrayList<>();
 
         database=  FirebaseDatabase.getInstance(); // Firebase database 연동
         reference =database.getReference().child("medicine");// DB 테이블 연결
 
-
-       /*reference.addValueEventListener(new ValueEventListener() {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                list.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    TotalData totaldata= snapshot.getValue(TotalData.class);
 
-                    list.add(totaldata);
-                   adapter.notifyDataSetChanged();
+                for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()){
+                    TotalquantityData totalquantityData = dataSnapshot1.getValue(TotalquantityData.class);
+                    list.add(totalquantityData);
+                    adapter.notifyDataSetChanged();
                 }
+
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
-    TotalData totalData = new TotalData("dd","rr");
-      Toast.makeText(getContext(),totalData.getTotalaccount()+"",Toast.LENGTH_SHORT).show();
-      list.add(totalData);
-        adapter = new TotalAdapter(list); //생성자를 이용해서 list를 Adapter로 전달
+        adapter = new TotalquantitiyAdapter(list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //레이아웃형식
+        recyclerView.setAdapter(adapter); //어뎁터 설정*/
 
-        recyclerView .setAdapter(adapter); //어뎁터 설정
+
+
 
 
         return view;
