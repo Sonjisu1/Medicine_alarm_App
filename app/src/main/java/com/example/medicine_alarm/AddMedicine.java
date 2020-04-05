@@ -93,7 +93,7 @@ public class AddMedicine extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        reference = database.getReference("medicine");
+        reference = database.getReference().child("medicine");
 
         extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
 
@@ -105,16 +105,31 @@ public class AddMedicine extends AppCompatActivity {
                 pre_minute=extras.getInt("minute");  //분
             account=extras.getString("account"); //약 개수
 
+            Toast.makeText(getApplicationContext(),account+"",Toast.LENGTH_SHORT).show();
+
 
 
 
                 edt1.setText(pre_data);  //이전 약이름을 보여줌
 
+            //이전 spinner 정보 가져오기
+            if(account.equals("1알")){
+                spinner.setSelection(0);
+            }else if(account.equals("2알")){
+                spinner.setSelection(1);
+            }else if(account.equals("3알")){
+                spinner.setSelection(2);
+            }else if(account.equals("4알")){
+                spinner.setSelection(3);
+            }else{
+
+            }
 
 
 
 
 
+/*
                 reference.addChildEventListener(new ChildEventListener() { //기존에 저장했던 알람시간 가져오기
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -152,9 +167,9 @@ public class AddMedicine extends AppCompatActivity {
                 });
 
 
+*/
 
-
-           /*reference.addValueEventListener(new ValueEventListener() {
+           reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     list.clear();
@@ -314,7 +329,9 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-                    diaryNotification(calendar,edt1.getText().toString(),account);
+
+
+                    diaryNotification(calendar,edt1.getText().toString(),spinner.getSelectedItem().toString());
 
 
 
