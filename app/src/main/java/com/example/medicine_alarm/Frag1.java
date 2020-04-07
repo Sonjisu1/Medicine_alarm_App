@@ -220,7 +220,7 @@ public class Frag1 extends Fragment {
 
 
 
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-mm-dd hh:kk");
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         Date time = new Date(); //DATE 객체선언
 
         String time1 = format1.format(time); //날짜 시간 출력
