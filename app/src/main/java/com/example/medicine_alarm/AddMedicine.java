@@ -280,6 +280,7 @@ public class AddMedicine extends AppCompatActivity {
                 public void onClick(View view, int position) {
 
                     list.remove(position); //리사이클러뷰 아이템 삭제
+
                     adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
                     cancelAlarm(); //알람(Notification) 취소
                 }
@@ -330,14 +331,25 @@ public class AddMedicine extends AppCompatActivity {
 
                     list.add(alarmtimedata);   //데이터를 ArrayList에 저장
 
-                   // update_data=edt1.getText().toString(); //EditText에서 받아온 String
-
-
-                    //databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
-                    //Firebase에 알람시간 데이터를 추가
-
-
                     adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+
+                    // update_data=edt1.getText().toString(); //EditText에서 받아온 String
+                    if(edt1.getText().toString().equals(pre_data)){
+                        Map<String,Object> update = new HashMap<>();
+                        update.put("ampm",alarmtimedata.getAmpm());
+                        update.put("hour",alarmtimedata.gethour());
+                        update.put("mintue01",alarmtimedata.getMintue01());
+                        count1++;
+                        databaseReference.child(pre_data).child("alarmtime"+count1).setValue(alarmtimedata);
+                    }else{
+
+                    }
+
+
+                    //Firebase에 알람시간 데이터를 추
+
+
 
 
 
@@ -364,6 +376,7 @@ public class AddMedicine extends AppCompatActivity {
 
                     diaryNotification(calendar, update_data,spinner.getSelectedItem().toString());
                     count1++;
+                    reference.child(update_data).child("alarmdata"+count1).setValue(alarmtimedata);
 
 
 
@@ -443,12 +456,16 @@ public class AddMedicine extends AppCompatActivity {
 
                     update_data = edt1.getText().toString(); //수정할 정보
 
-                    reference.child(pre_data).removeValue(); //기존 데이터 삭제
 
-                    reference.child(update_data).setValue(alarmtimedata);
+                    if(update_data.equals(pre_data)){      //약 이름을 바꾸지 않았다면
+
+                    }else {
+
+                    }
+                   // reference.child(update_data).setValue(alarmtimedata);
                     //Firebase에 알람시간 데이터를 추가
 
-
+                  /*  reference.child(pre_data).removeValue(); //기존 데이터 삭제
                     // medicineitem medicineitem1 = new medicineitem(R.drawable.ic_access_alarm_black_24dp, update_data, spinner.getSelectedItem().toString(),hour_24,minute);
                         //새로운 데이터를 medicineitem 형태로
                     Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 추가
@@ -460,7 +477,7 @@ public class AddMedicine extends AppCompatActivity {
                     update.put("minute",minute);                                 //분
 
                     reference.child(edt1.getText().toString()).updateChildren(update);  //Firbase에 적용
-
+*/
                    // databaseReference.child("medicine").child(update_data).setValue(); // Firebase에 저장
                         finish();
 
@@ -474,9 +491,9 @@ public class AddMedicine extends AppCompatActivity {
 
 
                     }else{ // EditText가 공백이 아닐 때
-                        medicineitem medicineitem = new medicineitem(R.drawable.ic_access_alarm_black_24dp, edt1.getText().toString(), spinner.getSelectedItem().toString(),hour_24,minute);
 
-                        reference.child(update_data).setValue(alarmtimedata);
+
+                       // reference.child(update_data).setValue(alarmtimedata);
                         Map<String,Object> update = new HashMap<>();     //해쉬맵을 사용해서 데이터 값을 추가
                         update.put("Medicinename", edt1.getText().toString());
                         update.put("account",spinner.getSelectedItem().toString());
