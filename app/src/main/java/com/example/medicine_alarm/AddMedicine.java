@@ -257,11 +257,15 @@ public class AddMedicine extends AppCompatActivity {
                 @Override
                 public void onClick(View view, int position) {
 
-                   reference.child(pre_data).child("hour").removeValue(); //Firebase내의  데이터 삭제
-                   reference.child(pre_data).child("ampm").removeValue();
-                   reference.child(pre_data).child("mintue01").removeValue();
+                   //reference.child(pre_data).child("hour").removeValue(); //Firebase내의  데이터 삭제
+                   //reference.child(pre_data).child("ampm").removeValue();
+                   //reference.child(pre_data).child("mintue01").removeValue();
+                    Alarmtimedata alarmtimedata2 = list.get(position);
                     list.remove(position); //리사이클러뷰 아이템 삭제
                     adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
+
+                    databaseReference.child(edt1.getText().toString()).child("alarmtime"+alarmtimedata2.gethour()+alarmtimedata2.getMintue01()).removeValue();
+
 
                    // cancelAlarm(); //알람(Notification) 취소
                 }
@@ -279,9 +283,14 @@ public class AddMedicine extends AppCompatActivity {
                 @Override
                 public void onClick(View view, int position) {
 
+                    Alarmtimedata alarmtimedata2 = list.get(position);
+
                     list.remove(position); //리사이클러뷰 아이템 삭제
 
                     adapter.notifyItemRemoved(position); //리사이클러뷰에 반영
+
+                    reference.child(edt1.getText().toString()).child("alarmtime"+alarmtimedata2.gethour()+alarmtimedata2.getMintue01()).removeValue();
+
                     cancelAlarm(); //알람(Notification) 취소
                 }
 
@@ -334,6 +343,8 @@ public class AddMedicine extends AppCompatActivity {
                     adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
 
+
+
                     // update_data=edt1.getText().toString(); //EditText에서 받아온 String
                     if(edt1.getText().toString().equals(pre_data)){
                         Map<String,Object> update = new HashMap<>();
@@ -341,7 +352,7 @@ public class AddMedicine extends AppCompatActivity {
                         update.put("hour",alarmtimedata.gethour());
                         update.put("mintue01",alarmtimedata.getMintue01());
                         count1++;
-                        databaseReference.child(pre_data).child("alarmtime"+count1).setValue(alarmtimedata);
+                        reference.child(pre_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
                     }else{
 
                     }
@@ -363,20 +374,22 @@ public class AddMedicine extends AppCompatActivity {
                     alarmtimedata= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
                     list.add(alarmtimedata);   //데이터를 ArrayList에 저장
+                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
                     update_data=edt1.getText().toString(); //EditText에서 받아온 String
+                    reference.child(update_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
 
 
 
-                   // databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
+
+                    // databaseReference.child("medicine").child(update_data).setValue(alarmtimedata);
                     //Firebase에 알람시간 데이터를 추가
 
 
-                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
 
                     diaryNotification(calendar, update_data,spinner.getSelectedItem().toString());
-                    count1++;
-                    reference.child(update_data).child("alarmdata"+count1).setValue(alarmtimedata);
+
 
 
 
