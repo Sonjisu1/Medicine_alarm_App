@@ -135,8 +135,13 @@ public class Frag1 extends Fragment {
 
         view = inflater.inflate(R.layout.frag1,container,false); //레이아웃 지정
 
+        SimpleDateFormat format2 = new SimpleDateFormat("yyyy-M-dd");
+        Date time3= new Date(); //DATE 객체선언
+
+        String time2 = format2.format(time3); //날짜 시간 출력
+
         database=  FirebaseDatabase.getInstance(); // Firebase database 연동
-        reference =database.getReference("medicine");// DB 테이블 연결
+        reference =database.getReference().child("medicine").child(time2);// DB 테이블 연결
 
 
         ImageButton imageButton = (ImageButton) view.findViewById(R.id.add);
@@ -217,7 +222,6 @@ public class Frag1 extends Fragment {
 
             }
         }));
-
 
 
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");

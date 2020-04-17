@@ -64,7 +64,8 @@ public class AddMedicine extends AppCompatActivity {
 
     DatabaseReference reference;
 
-    ArrayList<Alarmtimedata> list = new ArrayList<>(); //알람시간 추가 데이터를 저장할 Arraylist
+    ArrayList<Alarmtimedata> list; //알람시간 추가 데이터를 저장할 Arraylist
+    ArrayList<Alarmtimedata> list2;
 
     RecyclerView recyclerView;
     Bundle extras=null;
@@ -92,11 +93,18 @@ public class AddMedicine extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance(); // Firebase database 연동
 
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-M-dd");
+        Date time = new Date(); //DATE 객체선언
+
+        String time1 = format1.format(time); //날짜 시간 출력
 
 
-        reference = database.getReference().child("medicine");
+        reference = database.getReference().child("medicine").child(time1);
 
         extras = getIntent().getExtras();  //MainActivity에서 보낸 이전 약 정보를 받음
+
+        list = new ArrayList<>();
+        list2 = new ArrayList<>();
 
         if (extras != null) {          //리사이클러뷰 아이템 터치해서 AddMedicine Acitivity가 실행될 때
 
@@ -108,7 +116,7 @@ public class AddMedicine extends AppCompatActivity {
 
 
 
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("medicine");
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("medicine").child(time1);
 
                 edt1.setText(pre_data);  //이전 약이름을 보여줌
 
@@ -267,7 +275,7 @@ public class AddMedicine extends AppCompatActivity {
                     databaseReference.child(edt1.getText().toString()).child("alarmtime"+alarmtimedata2.gethour()+alarmtimedata2.getMintue01()).removeValue();
 
 
-                   // cancelAlarm(); //알람(Notification) 취소
+                   //cancelAlarm(); //알람(Notification) 취소
                 }
 
                 @Override
@@ -301,10 +309,16 @@ public class AddMedicine extends AppCompatActivity {
             }));
 
         }
+        list = new ArrayList<>();
 
-        timeadd.setOnClickListener(new View.OnClickListener() { //알람시간 추가하기 버튼 클릭 시
+        timeadd.setOnClickListener(new View.OnClickListener() {//알람시간 추가하기 버튼 클릭 시
+
+
+
             @Override
             public void onClick(View v) {
+
+
                 if (Build.VERSION.SDK_INT >= 23) {    //Timepicker에 설정된 시간 가져오기
                     hour_24 = picker.getHour();
                     minute = picker.getMinute();
@@ -334,31 +348,30 @@ public class AddMedicine extends AppCompatActivity {
                 if (calendar.before(Calendar.getInstance())) {
                     calendar.add(Calendar.DATE, 1);
                 }
+
+
+
                 if(extras != null){ //리사이클러뷰 아이템 터치 시(수정할 때)
 
-                     alarmtimedata= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
-                    list.add(alarmtimedata);   //데이터를 ArrayList에 저장
+                    update_data=edt1.getText().toString(); //EditText에서 받아온 String
 
-                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
-
+                        Alarmtimedata alarmtimedata4= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
 
+                        list.add(alarmtimedata4);   //데이터를 ArrayList에 저장
+                        adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
-                    // update_data=edt1.getText().toString(); //EditText에서 받아온 String
                     if(edt1.getText().toString().equals(pre_data)){
                         Map<String,Object> update = new HashMap<>();
-                        update.put("ampm",alarmtimedata.getAmpm());
-                        update.put("hour",alarmtimedata.gethour());
-                        update.put("mintue01",alarmtimedata.getMintue01());
-                        count1++;
-                        reference.child(pre_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
+                        update.put("ampm",alarmtimedata4.getAmpm());
+                        update.put("hour",alarmtimedata4.gethour());
+                        update.put("mintue01",alarmtimedata4.getMintue01());
+
+                        databaseReference.child(pre_data).child("alarmtime"+alarmtimedata4.gethour()+alarmtimedata4.getMintue01()).updateChildren(update);
                     }else{
 
                     }
-
-
-                    //Firebase에 알람시간 데이터를 추
 
 
 
@@ -371,14 +384,20 @@ public class AddMedicine extends AppCompatActivity {
 
 
                 }else{ //버튼으로 새로 추가할 때
-                    alarmtimedata= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
-
-                    list.add(alarmtimedata);   //데이터를 ArrayList에 저장
-                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
-
                     update_data=edt1.getText().toString(); //EditText에서 받아온 String
-                    reference.child(update_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
+                    if(update_data.equals("")){
+                        Toast.makeText(getApplicationContext(),"알람 이름을 적어주세요.",Toast.LENGTH_SHORT).show();
+                    }else{
+                        alarmtimedata= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
+                        list.add(alarmtimedata);   //데이터를 ArrayList에 저장
+                        adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+
+                        reference.child(update_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
+
+
+                    }
 
 
 

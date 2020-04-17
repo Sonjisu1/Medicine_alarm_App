@@ -98,7 +98,7 @@ public class TabFragment extends Fragment {
                 case 0:
                     return "알람";
                 case 1:
-                    return "총 수량";
+                    return "기록";
 
 
                 default:

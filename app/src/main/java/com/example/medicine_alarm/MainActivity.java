@@ -12,6 +12,7 @@ import android.app.DirectAction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -190,6 +191,9 @@ public class MainActivity extends AppCompatActivity implements Frag1.onClickList
         public void onClick(View v) {
             Map<String,Object> update = new HashMap<>(); //해쉬맵을 사용해서 데이터 값을 변경
             update.put("iconDrawable",R.drawable.ic_check_circle_black_24dp); //복용 버튼 터치 시 아이콘 바뀜
+
+
+
             reference.child(value).updateChildren(update); //변경된 내용 파이어베이스에 저장
 
 
