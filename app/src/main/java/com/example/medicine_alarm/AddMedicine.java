@@ -3,12 +3,14 @@ package com.example.medicine_alarm;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -21,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +59,7 @@ public class AddMedicine extends AppCompatActivity {
     String pre_data; //이전 데이터
     String update_data;  //수정될 데이터
     Spinner spinner;
-    medicineitem medicineitem;
+
     int  hour_24, minute;
     int hour;
     AlarmManager alarmManager; //알람매니저
@@ -70,8 +73,9 @@ public class AddMedicine extends AppCompatActivity {
     RecyclerView recyclerView;
     Bundle extras=null;
     String am_pm;
+    Toolbar toolbar;
     private static int count=0;
-    private static int count1 =0;
+
     String account;
     AlarmTimeAdd adapter;
     Alarmtimedata alarmtimedata; //알람시간추가 데이터
@@ -87,16 +91,26 @@ public class AddMedicine extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinner);
         Button timeadd = (Button) findViewById(R.id.timeAdd);
          recyclerView = (RecyclerView) findViewById(R.id.addalarmtime);
+         toolbar = findViewById(R.id.toolbar);
+
+         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false); //기존 title 삭제
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); //뒤로가기
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_backspace_black_24dp); //뒤로가기 이미지
+
 
          picker = (TimePicker) findViewById(R.id.timepicker);
         //  Toast.makeText(getApplicationContext(),data,Toast.LENGTH_SHORT).show();
 
         database = FirebaseDatabase.getInstance(); // Firebase database 연동
 
+
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-M-dd");
         Date time = new Date(); //DATE 객체선언
 
         String time1 = format1.format(time); //날짜 시간 출력
+
+
 
 
         reference = database.getReference().child("medicine").child(time1);
@@ -105,6 +119,7 @@ public class AddMedicine extends AppCompatActivity {
 
         list = new ArrayList<>();
         list2 = new ArrayList<>();
+
 
         if (extras != null) {          //리사이클러뷰 아이템 터치해서 AddMedicine Acitivity가 실행될 때
 
@@ -275,7 +290,7 @@ public class AddMedicine extends AppCompatActivity {
                     databaseReference.child(edt1.getText().toString()).child("alarmtime"+alarmtimedata2.gethour()+alarmtimedata2.getMintue01()).removeValue();
 
 
-                   //cancelAlarm(); //알람(Notification) 취소
+                   cancelAlarm(); //알람(Notification) 취소
                 }
 
                 @Override
@@ -667,4 +682,15 @@ public class AddMedicine extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case  android.R.id.home:{ //뒤로가기를 터치 했을 때
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
