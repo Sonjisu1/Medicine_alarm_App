@@ -79,7 +79,33 @@ public class AddMedicine extends AppCompatActivity {
     String account;
     AlarmTimeAdd adapter;
     Alarmtimedata alarmtimedata; //알람시간추가 데이터
+    Alarmtimedata alarmtimedata4;
 
+    @Override
+    public void onBackPressed() { //뒤로가기하면
+        super.onBackPressed();
+
+        /*SimpleDateFormat format1 = new SimpleDateFormat("yyyy-M-dd"); //현재 시각
+        Date time = new Date(); //DATE 객체선언
+
+        String time1 = format1.format(time); //날짜 시간 출력
+
+
+
+        SimpleDateFormat format2 = new SimpleDateFormat("h:mm");
+        Date time2 = new Date(); //DATE 객체선언
+
+        String time3 = format1.format(time2); //날짜 시간 출력
+
+          //FirebaseDatabase.getInstance().getReference().child(time1).child(pre_data).removeValue();
+
+*/
+
+
+
+
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -290,7 +316,7 @@ public class AddMedicine extends AppCompatActivity {
                     databaseReference.child(edt1.getText().toString()).child("alarmtime"+alarmtimedata2.gethour()+alarmtimedata2.getMintue01()).removeValue();
 
 
-                   cancelAlarm(); //알람(Notification) 취소
+                  // cancelAlarm(); //알람(Notification) 취소
                 }
 
                 @Override
@@ -324,7 +350,7 @@ public class AddMedicine extends AppCompatActivity {
             }));
 
         }
-        list = new ArrayList<>();
+
 
         timeadd.setOnClickListener(new View.OnClickListener() {//알람시간 추가하기 버튼 클릭 시
 
@@ -332,6 +358,7 @@ public class AddMedicine extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
 
 
                 if (Build.VERSION.SDK_INT >= 23) {    //Timepicker에 설정된 시간 가져오기
@@ -369,25 +396,27 @@ public class AddMedicine extends AppCompatActivity {
                 if(extras != null){ //리사이클러뷰 아이템 터치 시(수정할 때)
 
 
+
                     update_data=edt1.getText().toString(); //EditText에서 받아온 String
 
-                        Alarmtimedata alarmtimedata4= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
 
-                        list.add(alarmtimedata4);   //데이터를 ArrayList에 저장
-                        adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
-                    if(edt1.getText().toString().equals(pre_data)){
-                        Map<String,Object> update = new HashMap<>();
-                        update.put("ampm",alarmtimedata4.getAmpm());
-                        update.put("hour",alarmtimedata4.gethour());
-                        update.put("mintue01",alarmtimedata4.getMintue01());
 
-                        databaseReference.child(pre_data).child("alarmtime"+alarmtimedata4.gethour()+alarmtimedata4.getMintue01()).updateChildren(update);
-                    }else{
+                    alarmtimedata4= new Alarmtimedata(hour_24+":",am_pm,minute+""); //시간 데이터 저장
 
-                    }
 
+                    adapter.notifyDataSetChanged(); //데이터 변경 알려줌
+
+
+                    list.add(alarmtimedata4);   //데이터를 ArrayList에 저장
+
+
+                  //  if(edt1.getText().toString().equals(pre_data)){
+
+                    //}else{
+
+                    //}
 
 
 
@@ -408,8 +437,6 @@ public class AddMedicine extends AppCompatActivity {
                         list.add(alarmtimedata);   //데이터를 ArrayList에 저장
                         adapter.notifyDataSetChanged(); //데이터 변경 알려줌
 
-
-                        reference.child(update_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
 
 
                     }
@@ -503,6 +530,10 @@ public class AddMedicine extends AppCompatActivity {
 
                     update_data = edt1.getText().toString(); //수정할 정보
 
+                    databaseReference.child(pre_data).child("alarmtime"+alarmtimedata4.gethour()+alarmtimedata4.getMintue01()).setValue(alarmtimedata4);
+
+
+
 
                     if(update_data.equals(pre_data)){      //약 이름을 바꾸지 않았다면
 
@@ -548,6 +579,9 @@ public class AddMedicine extends AppCompatActivity {
                         update.put("iconDrawable",R.drawable.ic_access_alarm_black_24dp);
                         update.put("minute",minute);
                         reference.child(edt1.getText().toString()).updateChildren(update);  //Firbase에 적용
+
+                        reference.child(update_data).child("alarmtime"+alarmtimedata.gethour()+alarmtimedata.getMintue01()).setValue(alarmtimedata);
+
 
                         //databaseReference.child("medicine").child(edt1.getText().toString()).setValue(medicineitem);
                         finish();
